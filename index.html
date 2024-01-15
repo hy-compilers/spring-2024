@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Course info – 
+      Compilers
+    </title>
+    <link rel="stylesheet" href="/spring-2024/assets/css/fonts.css">
+    <link rel="stylesheet" href="/spring-2024/assets/css/style.css">
+    <script>
+      const hideOtherSectionMenus = 1;
+    </script>
+    <script src="/spring-2024/assets/js/navigation.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+      onload="renderMathInElement(document.body, { delimiter: [{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}] });"></script>
+  </head>
+  <body class="loading">
+    <div class="menu-background" id="menu-background"></div>
+    <button class="menu" id="menu" aria-expanded="false" aria-controls="side" aria-label="Menu">
+      <svg viewBox="0 0 5 5" width="25" height="25">
+        <rect width="5" height="1"></rect>
+        <rect width="5" height="1" y="2"></rect>
+        <rect width="5" height="1" y="4"></rect>
+      </svg>
+    </button>
+    <div class="side" id="side">
+      <a class="header" href="/spring-2024/">
+        <header>
+          <h1>Compilers</h1><h2>spring 2024 <div style="color: red; font-weight: bold">*** DRAFT ***</div></h2></header>
+      </a>
+      <nav>
+        
+        <ul>
+          
+          
+            <li data-url="/">
+  <a href="/spring-2024/"
+    class="current"
+  >Course info</a>
+  
+  
+</li>
+          
+        </ul>
+        
+        
+          
+          
+          <ul>
+            
+              <li data-url="/intro-and-setup/">
+  <a href="/spring-2024/intro-and-setup/"
+    
+  >0. Intro & setup</a>
+  
+  
+</li>
+            
+              <li data-url="/overview/">
+  <a href="/spring-2024/overview/"
+    
+  >1. Overview</a>
+  
+  
+</li>
+            
+              <li data-url="/tokenizer/">
+  <a href="/spring-2024/tokenizer/"
+    
+  >2. Tokenizer</a>
+  
+  
+</li>
+            
+              <li data-url="/parser/">
+  <a href="/spring-2024/parser/"
+    
+  >3. Parser</a>
+  
+  
+</li>
+            
+              <li data-url="/interpreter/">
+  <a href="/spring-2024/interpreter/"
+    
+  >4. Interpreter</a>
+  
+  
+</li>
+            
+              <li data-url="/type-checker/">
+  <a href="/spring-2024/type-checker/"
+    
+  >5. Type checker</a>
+  
+  
+</li>
+            
+              <li data-url="/ir-generator/">
+  <a href="/spring-2024/ir-generator/"
+    
+  >6. IR generator</a>
+  
+  
+</li>
+            
+              <li data-url="/assembly-generator/">
+  <a href="/spring-2024/assembly-generator/"
+    
+  >7. Assembly generator</a>
+  
+  
+</li>
+            
+              <li data-url="/analysis-and-optimization/">
+  <a href="/spring-2024/analysis-and-optimization/"
+    
+  >8. Analysis & optimization</a>
+  
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+          
+          <ul>
+            
+              <li data-url="/project/">
+  <a href="/spring-2024/project/"
+    
+  >Project</a>
+  
+  
+</li>
+            
+              <li data-url="/language-spec/">
+  <a href="/spring-2024/language-spec/"
+    
+  >Language spec</a>
+  
+  
+</li>
+            
+              <li data-url="/sandbox/">
+  <a href="/spring-2024/sandbox/"
+    
+  >Sandbox</a>
+  
+  
+</li>
+            
+              <li data-url="/resources/">
+  <a href="/spring-2024/resources/"
+    
+  >Resources</a>
+  
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+        
+      </nav>
+    </div>
+    <main>
+      <div class="awning" id="awning" aria-hidden="true">Course info</div>
+      
+<script defer src="/spring-2024/assets/js/asides.js"></script>
+<script defer src="/spring-2024/assets/js/extra-highlights.js"></script>
+<article data-url="/">
+    <h1 id="compilers-spring-2024-5-cr">Compilers, spring 2024 (5 cr)</h1>
+
+<p>This course will show you hands-on how to build a simple compiler from start to finish.</p>
+
+<p>You then have the opportunity to take your compiler in a direction of your choosing.</p>
+
+<p>Enjoy!</p>
+
+<h2 id="course-structure">Course structure</h2>
+
+<p>The course is graded entirely on a <strong>project</strong>
+where you create a complete compiler for a simple programming language.</p>
+
+<p><strong>Chapters 0-7 will guide you in completing the mandatory part of the project</strong>.
+If you do all the <strong>tasks</strong> in chapters 2-7 properly, you’ll have passed the course.
+There are also some <em>optional</em> <strong>exercises</strong> to reinforce your understanding.</p>
+
+<p>For a high grade, you should also complete some optional parts of the project.
+The <a href="./project/">project page</a> and the <a href="./language-spec/">language specification page</a>
+have the details.</p>
+
+<p>Chapter 8 is a bonus chapter that helps with some optional parts of the project.</p>
+
+<p>This course is light on theory and heavy on practical programming.<br />
+<strong>It’s a good idea to start the project without delay!</strong></p>
+
+<p>The project’s deadline is <strong>18.3. 23:59:59</strong>.</p>
+
+<h2 id="schedule">Schedule</h2>
+
+<p>Teaching sessions will be on <strong>Tuesdays 12-14</strong> and <strong>Fridays 12-14</strong> in <strong>Exactum B121</strong>.</p>
+
+<p><strong>Tuesdays</strong> will at least initially have lectures that present the course material’s topics
+with some live coding.</p>
+
+<p><strong>Fridays</strong>, and possibly some later Tuesdays, have in-person workshops
+where you can work on your course project, ask for help and advice,
+or just chat about compilers and languages.</p>
+
+<h3 id="tuesday-lecture-topics">Tuesday lecture topics</h3>
+
+<p>Lecture schedule is tentative. We may move faster or slower than planned,
+and I’ll try to take your feedback into account when planning ahead.</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>Tue 16.1.</td>
+      <td>Intro, Overview, Tokenizer (ch. 0-2)</td>
+      <td><a href="tokenizer/#tasks">Tasks</a></td>
+    </tr>
+    <tr>
+      <td>Tue 23.1.</td>
+      <td>Parser (ch. 3)</td>
+      <td><a href="parser/#tasks">Tasks</a></td>
+    </tr>
+    <tr>
+      <td>Tue 30.1.</td>
+      <td>Interpreter (ch. 4)<br />Type checker (ch. 5)</td>
+      <td><a href="interpreter/#tasks">Tasks for interpreter</a><br /><a href="type-checker/#tasks">Tasks for typechecker</a></td>
+    </tr>
+    <tr>
+      <td>Tue 6.2.</td>
+      <td>IR generator (ch. 6)</td>
+      <td><a href="ir-generator/#tasks">Tasks</a></td>
+    </tr>
+    <tr>
+      <td>Tue 13.2.</td>
+      <td>Assembly generator (ch. 7)</td>
+      <td><a href="assembly-generator/#tasks">Tasks</a></td>
+    </tr>
+    <tr>
+      <td>Tue 20.2.</td>
+      <td>Extra workshop session<br />or<br />Analysis and optimization (ch. 8)</td>
+      <td><a href="analysis-and-optimization/#tasks">Tasks</a> (optional)</td>
+    </tr>
+    <tr>
+      <td>Tue 27.2.</td>
+      <td>Extra workshop session<br />or<br />A topic requested by you</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Screen and voice recordings will be attempted.</p>
+
+<h2 id="contact">Contact</h2>
+
+<ul>
+  <li><strong>Discord</strong>
+    <ul>
+      <li>If you’re unfamiliar with Discord, see <a href="https://github.com/Ohtuproju2021syksy/Discord-Bot-better/blob/main/documentation/usermanual-student.md">these detailed instructions</a></li>
+      <li>Otherwise, <a href="https://discord.com/channels/757581218085863474/867514950254985227/867514951233175612">here’s the invite link</a> and then <code class="language-plaintext highlighter-rouge">/join CSM14202</code></li>
+      <li>Please use the course-specific channel instead of the general chat channel.</li>
+      <li>Private messages are OK, but prefer asking technical questions on the channel:
+you might get an answer faster, and others students might benefit from
+seeing the question.</li>
+    </ul>
+  </li>
+  <li><strong>Instructor e-mail</strong>: <a href="mailto:martin.partel@helsinki.fi">martin.partel@helsinki.fi</a></li>
+</ul>
+
+<h2 id="getting-started">Getting started</h2>
+
+<p><a href="./intro-and-setup/">Start here!</a></p>
+
+</article>
+      <footer>
+        <img src="/spring-2024/assets/img/hy_logo.svg">
+      </footer>
+    </main>
+  </body>
+</html>

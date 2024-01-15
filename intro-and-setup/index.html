@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>0. Intro & setup – 
+      Compilers
+    </title>
+    <link rel="stylesheet" href="/spring-2024/assets/css/fonts.css">
+    <link rel="stylesheet" href="/spring-2024/assets/css/style.css">
+    <script>
+      const hideOtherSectionMenus = 1;
+    </script>
+    <script src="/spring-2024/assets/js/navigation.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+      onload="renderMathInElement(document.body, { delimiter: [{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}] });"></script>
+  </head>
+  <body class="loading">
+    <div class="menu-background" id="menu-background"></div>
+    <button class="menu" id="menu" aria-expanded="false" aria-controls="side" aria-label="Menu">
+      <svg viewBox="0 0 5 5" width="25" height="25">
+        <rect width="5" height="1"></rect>
+        <rect width="5" height="1" y="2"></rect>
+        <rect width="5" height="1" y="4"></rect>
+      </svg>
+    </button>
+    <div class="side" id="side">
+      <a class="header" href="/spring-2024/">
+        <header>
+          <h1>Compilers</h1><h2>spring 2024 <div style="color: red; font-weight: bold">*** DRAFT ***</div></h2></header>
+      </a>
+      <nav>
+        
+        <ul>
+          
+          
+            <li data-url="/">
+  <a href="/spring-2024/"
+    
+  >Course info</a>
+  
+  
+</li>
+          
+        </ul>
+        
+        
+          
+          
+          <ul>
+            
+              <li data-url="/intro-and-setup/">
+  <a href="/spring-2024/intro-and-setup/"
+    class="current"
+  >0. Intro & setup</a>
+  
+  
+</li>
+            
+              <li data-url="/overview/">
+  <a href="/spring-2024/overview/"
+    
+  >1. Overview</a>
+  
+  
+</li>
+            
+              <li data-url="/tokenizer/">
+  <a href="/spring-2024/tokenizer/"
+    
+  >2. Tokenizer</a>
+  
+  
+</li>
+            
+              <li data-url="/parser/">
+  <a href="/spring-2024/parser/"
+    
+  >3. Parser</a>
+  
+  
+</li>
+            
+              <li data-url="/interpreter/">
+  <a href="/spring-2024/interpreter/"
+    
+  >4. Interpreter</a>
+  
+  
+</li>
+            
+              <li data-url="/type-checker/">
+  <a href="/spring-2024/type-checker/"
+    
+  >5. Type checker</a>
+  
+  
+</li>
+            
+              <li data-url="/ir-generator/">
+  <a href="/spring-2024/ir-generator/"
+    
+  >6. IR generator</a>
+  
+  
+</li>
+            
+              <li data-url="/assembly-generator/">
+  <a href="/spring-2024/assembly-generator/"
+    
+  >7. Assembly generator</a>
+  
+  
+</li>
+            
+              <li data-url="/analysis-and-optimization/">
+  <a href="/spring-2024/analysis-and-optimization/"
+    
+  >8. Analysis & optimization</a>
+  
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+          
+          <ul>
+            
+              <li data-url="/project/">
+  <a href="/spring-2024/project/"
+    
+  >Project</a>
+  
+  
+</li>
+            
+              <li data-url="/language-spec/">
+  <a href="/spring-2024/language-spec/"
+    
+  >Language spec</a>
+  
+  
+</li>
+            
+              <li data-url="/sandbox/">
+  <a href="/spring-2024/sandbox/"
+    
+  >Sandbox</a>
+  
+  
+</li>
+            
+              <li data-url="/resources/">
+  <a href="/spring-2024/resources/"
+    
+  >Resources</a>
+  
+  
+</li>
+            
+          </ul>
+          
+          
+        
+          
+        
+      </nav>
+    </div>
+    <main>
+      <div class="awning" id="awning" aria-hidden="true">0. Intro & setup</div>
+      
+<script defer src="/spring-2024/assets/js/asides.js"></script>
+<script defer src="/spring-2024/assets/js/extra-highlights.js"></script>
+<article data-url="/intro-and-setup/">
+    <h1 id="0-intro--setup">0. Intro &amp; setup</h1>
+
+<h2 id="motivation">Motivation</h2>
+
+<p>Why study compilers? This question is worth asking, since compilers are non-trivial contraptions
+and most of us probably won’t work directly on one of them during our careers.</p>
+
+<p>While curiosity is always a good reason, there are practical reasons too:</p>
+
+<ul>
+  <li>Compilers are a collection of interesting and generalizable algorithms and programming patterns
+that fit together nicely. This makes building a compiler
+<strong>an excellent and fun software engineering exercise</strong>.</li>
+  <li>Understanding compilers gives you deep insight into why programming languages work the way they do,
+and it’s good to <strong>know your daily tools</strong> well.</li>
+  <li>Understanding the problems and design choices faced by programming languages helps you
+<strong>understand programming more deeply</strong>.</li>
+  <li>While creating an entirely new language and the associated tooling is usually not worth the effort,
+sometimes it’s useful to <strong>analyze or extend existing languages</strong>. Knowing compilers helps you
+do that effectively.</li>
+</ul>
+
+<h2 id="about-this-material">About this material</h2>
+
+<p>This course aims to be straightforward, practical and hands-on.
+It typically presents one good way of accomplishing a task,
+and then asks you to try it in practice.</p>
+
+<p>This means that, due to limited time, some theoretical breadth and depth has been sacrificed.
+If you’re looking for more, there are many <a href="../resources">great books</a> on compilers.</p>
+
+<p>The text has some <span data-aside="aside-example">green links</span>.
+These reveal <strong>optional, non-essential</strong> content that
+expand upon or contextualize things.</p>
+
+<aside id="aside-example">
+  <p>These usually explain:</p>
+  <ul>
+    <li>alternative approaches</li>
+    <li>how real languages have done something</li>
+    <li>how we could improve upon whatever we just built</li>
+    <li>how things are actually more complicated than it seems</li>
+  </ul>
+</aside>
+
+<h2 id="project-setup">Project setup</h2>
+
+<p>While you can complete the course project in any language you like,
+and almost all popular languages should be suitable,
+our examples and instructions are for Python.</p>
+
+<p>If you’re using Python, you can
+<a href="../assets/ext/downloads/compilers-project.tar.gz">download a project template</a>
+and follow the instructions in <code class="language-plaintext highlighter-rouge">README.md</code> to set it up.</p>
+
+</article>
+      <footer>
+        <img src="/spring-2024/assets/img/hy_logo.svg">
+      </footer>
+    </main>
+  </body>
+</html>

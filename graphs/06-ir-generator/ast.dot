@@ -1,0 +1,16 @@
+digraph G {
+  ordering="out"
+  node [shape="rect", fontname="monospace"]
+  edge [fontsize=10, fontname="monospace"]
+
+  plus [label="+"]
+  times [label="*"]
+  a [label="a : Int"]
+  seven [label="7 : Int"]
+  b [label="b : Int"]
+
+  plus -> a
+  plus -> times
+  times -> seven
+  times -> b
+}
