@@ -3,14 +3,14 @@ digraph G {
   node [shape="rect", fontname="monospace"]
   edge [fontsize=10, fontname="monospace"]
 
-  if [label=<if : Nothing<BR/><FONT POINT-SIZE="8">(condition type must be Bool, then-clause's type in this case is Nothing)</FONT>&nbsp;&nbsp;>]
-  lt [label=<&lt; : Bool<BR/><FONT POINT-SIZE="8">(operator &lt;'s type is (Int, Int) → Bool)</FONT>&nbsp;&nbsp;>]
-  print_int [label=<print_int : Nothing<BR/><FONT POINT-SIZE="8">(function print_int's type is (Int) → Nothing)</FONT>&nbsp;&nbsp;>]
-  times [label=<* : Int<BR/><FONT POINT-SIZE="8">(operator *'s type is (Int, Int) → Int)</FONT>&nbsp;&nbsp;>]
+  if [label="if : (Bool) → Nothing"]
+  lt [label="< : (Int, Int) → Bool"]
+  print_int [label="print_int : (Int) → Nothing"]
+  times [label="* : (Int, Int) → Int"]
   three [label="3 : Int"]
   ten [label="10 : Int"]
-  a [label=<a : Int<BR/><FONT POINT-SIZE="8">(assuming a is defined to be an Int)</FONT>&nbsp;>]
-  x [label=<x : Int<BR/><FONT POINT-SIZE="8">(assuming x is defined to be an Int)</FONT>&nbsp;>]
+  a [label="a : Int"]
+  x [label="x : Int"]
 
   if -> lt
   lt -> a
