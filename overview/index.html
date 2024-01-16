@@ -293,13 +293,13 @@ each AST node can be annotated with the type of its result.</p>
 
 <object data="../graphs/01-intro/ast-example.svg" type="image/svg+xml"></object>
 
-<p>Example output:</p>
+<p>Example output, with justification for each node’s type in parentheses:</p>
 
 <object data="../graphs/01-intro/typed-ast-example.svg" type="image/svg+xml"></object>
 
 <p>For instance, the type of operator <code class="language-plaintext highlighter-rouge">&lt;</code> is <code class="language-plaintext highlighter-rouge">(Int, Int) → Bool</code> means that
 it expects two integer parameters and results in a boolean.
-Type checking verifies that both parameters (<code class="language-plaintext highlighter-rouge">a</code> and <code class="language-plaintext highlighter-rouge">10</code>) are indeed integers
+Type checking verifies that both parameters (<code class="language-plaintext highlighter-rouge">a</code> and <code class="language-plaintext highlighter-rouge">10</code>) are indeed integers,
 and then it knows that the type of the result of the expression <code class="language-plaintext highlighter-rouge">a &lt; 10</code> is a boolean.</p>
 
 <h2 id="ir-generator">IR generator</h2>
