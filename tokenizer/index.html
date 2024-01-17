@@ -432,7 +432,14 @@ extract it and follow the instructions in <code class="language-plaintext highli
 and any following characters may be a-z / A-Z, digits (0-9) or underscores.</li>
       </ul>
     </li>
-    <li>Integer <span data-aside="literal">literals</span> like <code class="language-plaintext highlighter-rouge">7</code>, <code class="language-plaintext highlighter-rouge">123</code>, and <code class="language-plaintext highlighter-rouge">-95</code>.</li>
+    <li>Positive integer <span data-aside="literal">literals</span> like <code class="language-plaintext highlighter-rouge">7</code>, and <code class="language-plaintext highlighter-rouge">123</code>.
+      <ul>
+        <li>Don’t accept a minus sign <code class="language-plaintext highlighter-rouge">-</code> as part of an integer literal.
+We’ll later tokenize the minus sign as an operator.
+That’s because tokenizing e.g. <code class="language-plaintext highlighter-rouge">3-2</code> as <code class="language-plaintext highlighter-rouge">['3', '-', '2']</code>
+is easier to handle later than tokenizing it as <code class="language-plaintext highlighter-rouge">['3', '-2']</code>.</li>
+      </ul>
+    </li>
   </ul>
 
   <aside id="literal">
