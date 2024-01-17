@@ -377,11 +377,11 @@ physical registers, or to main memory locations when physical registers are exha
     <span class="nf">movq</span> <span class="nb">%rsp</span><span class="p">,</span> <span class="nb">%rbp</span>
     <span class="nf">subq</span> <span class="kc">$</span><span class="mi">96</span><span class="p">,</span> <span class="nb">%rsp</span>
 
-    <span class="c1"># LoadIntConst(1, x)</span>
-    <span class="nf">movq</span> <span class="kc">$</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">8</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">)</span>
+    <span class="c1"># LoadIntConst(123, x1)  (source code variable "a")</span>
+    <span class="nf">movq</span> <span class="kc">$</span><span class="mi">123</span><span class="p">,</span> <span class="o">-</span><span class="mi">8</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">)</span>
 
-    <span class="c1"># LoadIntConst(2, x2)</span>
-    <span class="nf">movq</span> <span class="kc">$</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">16</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">)</span>
+    <span class="c1"># LoadIntConst(456, x2)  (source code variable "x")</span>
+    <span class="nf">movq</span> <span class="kc">$</span><span class="mi">456</span><span class="p">,</span> <span class="o">-</span><span class="mi">16</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">)</span>
 
     <span class="c1"># LoadIntConst(10, x3)</span>
     <span class="nf">movq</span> <span class="kc">$</span><span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">24</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">)</span>
