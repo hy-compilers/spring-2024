@@ -32,7 +32,7 @@
 <g id="node4" class="node">
 <title>op1</title>
 <polygon fill="none" stroke="black" points="158.5,-180 104.5,-180 104.5,-144 158.5,-144 158.5,-180"/>
-<text text-anchor="middle" x="131.5" y="-158.3" font-family="monospace" font-size="14.00">&#45;</text>
+<text text-anchor="middle" x="131.5" y="-158.3" font-family="monospace" font-size="14.00">+</text>
 </g>
 <!-- op1&#45;&gt;three -->
 <g id="edge2" class="edge">
@@ -44,7 +44,7 @@
 <g id="node5" class="node">
 <title>op2</title>
 <polygon fill="none" stroke="black" points="122.5,-108 68.5,-108 68.5,-72 122.5,-72 122.5,-108"/>
-<text text-anchor="middle" x="95.5" y="-86.3" font-family="monospace" font-size="14.00">+</text>
+<text text-anchor="middle" x="95.5" y="-86.3" font-family="monospace" font-size="14.00">&#45;</text>
 </g>
 <!-- op1&#45;&gt;op2 -->
 <g id="edge1" class="edge">
