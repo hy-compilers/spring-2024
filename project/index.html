@@ -545,7 +545,7 @@ and <code class="language-plaintext highlighter-rouge">continue</code> must go b
 <ul>
   <li>In the interpreter, it’s probably easiest to implement these by abusing Python exceptions.</li>
   <li>The types of these expressions can be <code class="language-plaintext highlighter-rouge">Unit</code>.</li>
-  <li>In IR generation, you need to keep track of the current nnermost loop’s start and end labels.</li>
+  <li>In IR generation, you need to keep track of the current innermost loop’s start and end labels.</li>
   <li>Bonus task (+2p): allow <code class="language-plaintext highlighter-rouge">break</code> to take an optional result value,
 and make that the result value of the loop (instead of <code class="language-plaintext highlighter-rouge">Unit</code>).
 The type checker must check that every <code class="language-plaintext highlighter-rouge">break</code> of the same loop has a result value
