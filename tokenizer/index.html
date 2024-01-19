@@ -254,8 +254,9 @@ try <a href="https://regexlearn.com/learn/regex101">this online tutorial</a>.</p
   <li><code class="language-plaintext highlighter-rouge">X*</code> to allow zero or more repetitions of <code class="language-plaintext highlighter-rouge">X</code></li>
   <li><code class="language-plaintext highlighter-rouge">X+</code> to allow one or more repetitions of <code class="language-plaintext highlighter-rouge">X</code></li>
   <li><code class="language-plaintext highlighter-rouge">X|Y</code> to allow either <code class="language-plaintext highlighter-rouge">X</code> or <code class="language-plaintext highlighter-rouge">Y</code></li>
-  <li><code class="language-plaintext highlighter-rouge">()</code> for grouping, like in math and programming</li>
-  <li><code class="language-plaintext highlighter-rouge">[]</code> for sets of allowed characters</li>
+  <li><code class="language-plaintext highlighter-rouge">(...)</code> for grouping, like in math and programming</li>
+  <li><code class="language-plaintext highlighter-rouge">[...]</code> for sets of allowed characters</li>
+  <li><code class="language-plaintext highlighter-rouge">[^...]</code> for sets of disallowed characters</li>
   <li><code class="language-plaintext highlighter-rouge">.</code> to allow any single character</li>
 </ul>
 
@@ -296,6 +297,12 @@ try <a href="https://regexlearn.com/learn/regex101">this online tutorial</a>.</p
     <ul>
       <li>It means ”a”, followed by zero or more of: a digit, ”x”, ”y”, or ”z”.</li>
       <li>It matches inputs <code class="language-plaintext highlighter-rouge">a7y7c</code>, <code class="language-plaintext highlighter-rouge">axzc</code>, etc., but not e.g. <code class="language-plaintext highlighter-rouge">abc</code>.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">a[^0-9xyz]*c</code>
+    <ul>
+      <li>It means ”a”, followed by zero or more of anything <em>except</em> a digit, ”x”, ”y”, or ”z”.</li>
+      <li>It matches inputs <code class="language-plaintext highlighter-rouge">abc</code>, <code class="language-plaintext highlighter-rouge">abcdc</code>, etc., but not e.g. <code class="language-plaintext highlighter-rouge">a7y7c</code>.</li>
     </ul>
   </li>
   <li><code class="language-plaintext highlighter-rouge">a.*c</code>
@@ -542,6 +549,18 @@ text.
     <p>Note that regexes are not powerful enough to recognize <em>nested</em>
 multi-line comments.
 This is fine – most programming languages don’t support them either.</p>
+
+    <h3 id="negative-lookahead">Negative lookahead</h3>
+
+    <p>Writing a regex to correctly match all multi-line comments is possible, but challenging.
+Python’s (and many other languages’) regexes have an extension
+called ”negative lookahead”: you can write <code class="language-plaintext highlighter-rouge">(?!X)</code>, to check that <code class="language-plaintext highlighter-rouge">X</code>
+does not come next. Even if <code class="language-plaintext highlighter-rouge">(?!X)</code> matches, it does not move forward in the input.</p>
+
+    <p>For example, <code class="language-plaintext highlighter-rouge">[^abc]</code> matches any character except <code class="language-plaintext highlighter-rouge">a</code>, <code class="language-plaintext highlighter-rouge">b</code> or <code class="language-plaintext highlighter-rouge">c</code> and matching
+moves forward past that character. Similarly <code class="language-plaintext highlighter-rouge">(?![abc])</code> matches if the next character
+is any character except <code class="language-plaintext highlighter-rouge">a</code>, <code class="language-plaintext highlighter-rouge">b</code> or <code class="language-plaintext highlighter-rouge">c</code> (or if the input ends), but the next character
+is left for the next part of the regex to match. <code class="language-plaintext highlighter-rouge">[^abc]</code> and <code class="language-plaintext highlighter-rouge">(?![abc]).</code> are equivalent.</p>
   </div>
 
 </div>
