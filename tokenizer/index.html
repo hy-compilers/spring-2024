@@ -268,6 +268,11 @@ try <a href="https://regexlearn.com/learn/regex101">this online tutorial</a>.</p
   <li><code class="language-plaintext highlighter-rouge">.</code> to allow any single character</li>
 </ul>
 
+<p>Operators <code class="language-plaintext highlighter-rouge">?</code>, <code class="language-plaintext highlighter-rouge">*</code> and <code class="language-plaintext highlighter-rouge">+</code> are <strong>greedy</strong>: they match as much of the text
+as possible without preventing the regex as a whole from matching.
+To match as little as possible i.e. to make the operators non-greedy,
+append a <code class="language-plaintext highlighter-rouge">?</code>, so e.g. <code class="language-plaintext highlighter-rouge">X*</code> becomes <code class="language-plaintext highlighter-rouge">X*?</code>.</p>
+
 <p>Let’s look at some more examples.</p>
 
 <ul>
@@ -552,23 +557,20 @@ Many lines
 of comment
 text.
 */</span>
+<span class="n">print_int</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="cm">/* Another
+comment. */</span>
 </code></pre></div>    </div>
 
     <p>Note that regexes are not powerful enough to recognize <em>nested</em>
 multi-line comments.
 This is fine – most programming languages don’t support them either.</p>
 
-    <h3 id="negative-lookahead">Negative lookahead</h3>
+    <p><span data-aside="multiline-hint">Hint</span></p>
 
-    <p>Writing a regex to correctly match all multi-line comments is possible, but challenging.
-Python’s (and many other languages’) regexes have an extension
-called ”negative lookahead”: you can write <code class="language-plaintext highlighter-rouge">(?!X)</code>, to check that <code class="language-plaintext highlighter-rouge">X</code>
-does not come next. Even if <code class="language-plaintext highlighter-rouge">(?!X)</code> matches, it does not move forward in the input.</p>
-
-    <p>For example, <code class="language-plaintext highlighter-rouge">[^abc]</code> matches any character except <code class="language-plaintext highlighter-rouge">a</code>, <code class="language-plaintext highlighter-rouge">b</code> or <code class="language-plaintext highlighter-rouge">c</code> and matching
-moves forward past that character. Similarly <code class="language-plaintext highlighter-rouge">(?![abc])</code> matches if the next character
-is any character except <code class="language-plaintext highlighter-rouge">a</code>, <code class="language-plaintext highlighter-rouge">b</code> or <code class="language-plaintext highlighter-rouge">c</code> (or if the input ends), but the next character
-is left for the next part of the regex to match. <code class="language-plaintext highlighter-rouge">[^abc]</code> and <code class="language-plaintext highlighter-rouge">(?![abc]).</code> are equivalent.</p>
+    <aside id="multiline-hint">
+      <p>Use non-greedy repetition to stop at the first encountered <code class="language-plaintext highlighter-rouge">*/</code>.</p>
+    </aside>
   </div>
 
 </div>

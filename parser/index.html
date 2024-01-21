@@ -658,7 +658,7 @@ in <code class="language-plaintext highlighter-rouge">parse_factor</code>, and t
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">parse_factor</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="p">.</span><span class="n">Expression</span><span class="p">:</span>
     <span class="k">if</span> <span class="nf">peek</span><span class="p">().</span><span class="n">text</span> <span class="o">==</span> <span class="sh">'</span><span class="s">(</span><span class="sh">'</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nf">parse_parenthesized_expr</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nf">parse_parenthesized_expression</span><span class="p">()</span>
     <span class="k">elif</span> <span class="nf">peek</span><span class="p">().</span><span class="nb">type</span> <span class="o">==</span> <span class="sh">'</span><span class="s">int_literal</span><span class="sh">'</span><span class="p">:</span>
         <span class="k">return</span> <span class="nf">parse_int_literal</span><span class="p">()</span>
     <span class="k">elif</span> <span class="nf">peek</span><span class="p">().</span><span class="nb">type</span> <span class="o">==</span> <span class="sh">'</span><span class="s">identifier</span><span class="sh">'</span><span class="p">:</span>
@@ -666,7 +666,7 @@ in <code class="language-plaintext highlighter-rouge">parse_factor</code>, and t
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="nc">Exception</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="nf">peek</span><span class="p">().</span><span class="n">location</span><span class="si">}</span><span class="s">: expected </span><span class="sh">"</span><span class="s">(</span><span class="sh">"</span><span class="s">, an integer literal or an identifier</span><span class="sh">'</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">parse_parenthesized_expr</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="p">.</span><span class="n">Expression</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">parse_parenthesized_expression</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="p">.</span><span class="n">Expression</span><span class="p">:</span>
     <span class="nf">consume</span><span class="p">(</span><span class="sh">'</span><span class="s">(</span><span class="sh">'</span><span class="p">)</span>
     <span class="c1"># Recursively call the top level parsing function
 </span>    <span class="c1"># to parse whatever is inside the parentheses.
@@ -675,8 +675,8 @@ in <code class="language-plaintext highlighter-rouge">parse_factor</code>, and t
     <span class="k">return</span> <span class="n">expr</span>
 </code></pre></div></div>
 
-<p>Note that our parser is now recursive: <code class="language-plaintext highlighter-rouge">parse_parenthesized_expr</code> calls <code class="language-plaintext highlighter-rouge">parse_expression</code>,
-which may end up calling <code class="language-plaintext highlighter-rouge">parse_parenthesized_expr</code> again, etc.</p>
+<p>Note that our parser is now recursive: <code class="language-plaintext highlighter-rouge">parse_parenthesized_expression</code> calls <code class="language-plaintext highlighter-rouge">parse_expression</code>,
+which may end up calling <code class="language-plaintext highlighter-rouge">parse_parenthesized_expression</code> again, etc.</p>
 
 <p>We now have a pretty good parser for simple math expressions!</p>
 
@@ -694,11 +694,11 @@ languages.</p>
   <p><strong>Backtracking</strong> is when a parsing function speculatively calls another parsing function,
 and if it fails, it reverts <code class="language-plaintext highlighter-rouge">pos</code> and tries some other parsing function.</p>
 
-  <p>Here’s an example of how <code class="language-plaintext highlighter-rouge">parse_factor()</code> could be written using backtracking:</p>
+  <p>Here’s a contrived example of how <code class="language-plaintext highlighter-rouge">parse_factor()</code> could be written using backtracking:</p>
 
   <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">prev_pos</span> <span class="o">=</span> <span class="n">pos</span>
 <span class="k">try</span><span class="p">:</span>
-    <span class="k">return</span> <span class="nf">parse_parenthesized_expr</span><span class="p">()</span>
+    <span class="k">return</span> <span class="nf">parse_parenthesized_expression</span><span class="p">()</span>
 <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>  <span class="c1"># (a more specific exception type would be good)
 </span>    <span class="n">pos</span> <span class="o">=</span> <span class="n">prev_pos</span>
     <span class="k">try</span><span class="p">:</span>
@@ -792,7 +792,7 @@ Here’s a grammar describing the same language as above in a different style:</
 
   <p>Various techniques exist to create parsers out of grammars like this.
 Each technique comes with its own performance characteristics as well as
-limitations and requirements on the grammar.
+limitations and requirements for the grammar.
 For instance, the second example above uses ”left-recursive” rules (e.g. <code class="language-plaintext highlighter-rouge">expr = expr ...</code>).
 A class of top-down parsing algorithms ”<a href="https://en.wikipedia.org/wiki/LL_parser">LL</a>”
 end up in an infinite loop on left-recursion, while a more powerful but
@@ -839,7 +839,7 @@ Grammars are, in my experience, a rather
 
   <p>Clean up some details that we’ve glossed over:</p>
   <ul>
-    <li>Make sure the entire input is always parsed. Don’t allow junk at
+    <li>Make sure the entire input is always parsed. Don’t allow garbage at
 the end of the input. Make sure e.g. <code class="language-plaintext highlighter-rouge">a + b c</code> gives an error.</li>
     <li>Handle the case of empty input more nicely
 (currently <code class="language-plaintext highlighter-rouge">peek()</code> crashes uglily with <code class="language-plaintext highlighter-rouge">IndexError</code> if <code class="language-plaintext highlighter-rouge">tokens</code> is empty).</li>
