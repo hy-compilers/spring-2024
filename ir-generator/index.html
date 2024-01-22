@@ -460,23 +460,15 @@ Most of these you’ve already seen in examples.</p>
 <span class="k">class</span> <span class="nc">Label</span><span class="p">(</span><span class="n">Instruction</span><span class="p">):</span>
     <span class="sh">"""</span><span class="s">Marks the destination of a jump instruction.</span><span class="sh">"""</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
-
-<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="k">class</span> <span class="nc">Return</span><span class="p">():</span>
-    <span class="sh">"""</span><span class="s">Returns to the caller.</span><span class="sh">"""</span>
 </code></pre></div></div>
-
-<p>The <code class="language-plaintext highlighter-rouge">Return</code> instruction is meant to represent returning from a function.
-Our language doesn’t have user-defined functions yet, so <code class="language-plaintext highlighter-rouge">Return</code> will only be
-used to return from computing the top-level expression.</p>
 
 <p>So if your source code is <code class="language-plaintext highlighter-rouge">1+1</code> then we’d compile that to the following IR:</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">LoadIntConst</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">x1</span><span class="p">)</span>
 <span class="nc">LoadIntConst</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">x2</span><span class="p">)</span>
 <span class="nc">Call</span><span class="p">(</span><span class="o">+</span><span class="p">,</span> <span class="p">[</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">],</span> <span class="n">x3</span><span class="p">)</span>
-<span class="nc">Return</span><span class="p">()</span>
-</code></pre></div></div>
+<span class="nc">Call</span><span class="p">(</span><span class="n">print_int</span><span class="p">,</span> <span class="p">[</span><span class="n">x3</span><span class="p">],</span> <span class="n">x4</span><span class="p">)</span>  <span class="c1"># Added to print the final result
+</span></code></pre></div></div>
 
 <h2 id="generating-ir">Generating IR</h2>
 
@@ -574,11 +566,7 @@ Each ”<code class="language-plaintext highlighter-rouge">...</code>” means y
         <span class="p">...</span> <span class="c1"># Emit a call to 'print_int'
 </span>    <span class="k">elif</span> <span class="n">var_types</span><span class="p">[</span><span class="n">var_final_result</span><span class="p">]</span> <span class="o">==</span> <span class="n">Bool</span><span class="p">:</span>
         <span class="p">...</span> <span class="c1"># Emit a call to 'print_bool'
-</span>    
-    <span class="c1"># The last instruction must be a return to
-</span>    <span class="c1"># the calling function.
-</span>    <span class="n">ins</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">ir</span><span class="p">.</span><span class="nc">Return</span><span class="p">(</span><span class="n">root_expr</span><span class="p">.</span><span class="n">location</span><span class="p">))</span>
-
+</span>
     <span class="k">return</span> <span class="n">ins</span>
 </code></pre></div></div>
 

@@ -1123,9 +1123,10 @@ and implement cases for the following IR instructions:</p>
     <li><code class="language-plaintext highlighter-rouge">CondJump</code>: use <code class="language-plaintext highlighter-rouge">cmpq $0, _condition_</code> to set comparison flags, then <code class="language-plaintext highlighter-rouge">jne _label_</code>
 to ”jump if not equal” (i.e. ”condition != 0”),
 then <code class="language-plaintext highlighter-rouge">jmp _label_</code> to jump in the other case.</li>
-    <li><code class="language-plaintext highlighter-rouge">Return</code>: restore the stack and return from the function as described
-<a href="#functions-and-the-stack">above</a>.</li>
   </ul>
+
+  <p>Finally, restore the stack and return from the function as described
+<a href="#functions-and-the-stack">above</a>.</p>
 
   <p>Check manually that the expression <code class="language-plaintext highlighter-rouge">{ var x = true; if x then 1 else 2; }</code>
 yields sensible-looking Assembly code. We’ll test more thoroughly once

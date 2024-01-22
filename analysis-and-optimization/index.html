@@ -375,10 +375,10 @@ This frees up the storage location of <code class="language-plaintext highlighte
 </span><span class="nc">Jump</span><span class="p">(</span><span class="n">end</span><span class="p">)</span>
 
 <span class="nc">Label</span><span class="p">(</span><span class="n">end</span><span class="p">)</span>
-<span class="nc">Return</span><span class="p">()</span>
+<span class="nc">Return</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p>The correct answer to reaching definitions at instruction <code class="language-plaintext highlighter-rouge">Return()</code>
+<p>The correct answer to reaching definitions at instruction <code class="language-plaintext highlighter-rouge">Return(x)</code>
 is that:</p>
 <ul>
   <li><code class="language-plaintext highlighter-rouge">x</code> might have been last set by <code class="language-plaintext highlighter-rouge">LoadIntConst(2, x)</code> or <code class="language-plaintext highlighter-rouge">Call(f, [x, y], x)</code>,
