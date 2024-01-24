@@ -435,9 +435,10 @@ has no parent context and has the built-in functions and operators as its locals
 <ul>
   <li><code class="language-plaintext highlighter-rouge">print_int</code>: prints an integer and a newline to standard output.</li>
   <li><code class="language-plaintext highlighter-rouge">print_bool</code>: prints either <code class="language-plaintext highlighter-rouge">true</code> or <code class="language-plaintext highlighter-rouge">false</code> and a newline to standard output.</li>
-  <li><code class="language-plaintext highlighter-rouge">read_int</code>: reads a single line, including the newline, and interprets it as an integer.
-If the input before the newline contains characters other than digits and a prefix minus,
-then <code class="language-plaintext highlighter-rouge">read_int</code> is allowed to fail or have arbitrary behavior.</li>
+  <li><code class="language-plaintext highlighter-rouge">read_int</code>: reads a single line, including the newline, from standard input,
+and interprets it as an integer. If the input before the newline contains characters
+other than digits and a prefix minus, then <code class="language-plaintext highlighter-rouge">read_int</code> is allowed to fail or
+have arbitrary behavior.</li>
 </ul>
 
 <p>The output of a program whose evaluation succeeds
