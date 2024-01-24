@@ -372,6 +372,14 @@ are defined. We’ll put them there in task 3.</p>
 <div class="note">
   <p>Get the <a href="#interpreter-code-example">interpreter code example</a> working in your project
 and test that interpreting <code class="language-plaintext highlighter-rouge">2 + 3</code> works.</p>
+
+  <p>You don’t need to improve error checking in cases where the type checker,
+which we will write in chapter 5, would reject the program.
+For example, <code class="language-plaintext highlighter-rouge">1 + (2 &lt; 3)</code> tries to add a number and a boolean,
+which the type checker won’t allow.
+It’s OK for the interpreter to fail with an ugly error,
+or do something unexpected in these cases
+(in Python, <code class="language-plaintext highlighter-rouge">1 + (2 &lt; 3)</code> happens to be <code class="language-plaintext highlighter-rouge">2</code> because <code class="language-plaintext highlighter-rouge">True</code> is converted to <code class="language-plaintext highlighter-rouge">1</code>).</p>
 </div>
 
 <p class="note-title">Task 2</p>
@@ -453,6 +461,9 @@ to a list, and then you can assert about the contents of that list.</p>
 <div class="note">
   <p>Complete the interpreter by implementing all constructs mentioned
 in the <a href="../language-spec">language spec</a>.</p>
+
+  <p>As in task 1, the interpreter is allowed to fail or do silly things
+if the program would not pass type checking.</p>
 
   <p><strong>Hint</strong>: you can represent the value <code class="language-plaintext highlighter-rouge">unit</code> with Python’s <code class="language-plaintext highlighter-rouge">None</code>.</p>
 </div>
