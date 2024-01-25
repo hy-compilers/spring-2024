@@ -925,23 +925,6 @@ instead of repeating code for each level.</p>
 <p class="note-title">Task 5</p>
 
 <div class="note">
-  <p>Unlike Python, we want our language to distinguish between creating new variables
-and assigning to existing variables.
-A <strong>variable declaration</strong> introduces a new variable, and it should look like this:</p>
-
-  <div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span> <span class="n">x</span> <span class="o">=</span> <span class="m">123</span>
-</code></pre></div>  </div>
-
-  <p>Add support for parsing variable declarations.</p>
-
-  <p>Like every other construct so far, variable declarations can be
-treated as expressions, so <code class="language-plaintext highlighter-rouge">(var x = 123) + 7</code> is valid
-as far as the parser is concerned.</p>
-</div>
-
-<p class="note-title">Task 6</p>
-
-<div class="note">
   <p>A <strong>block</strong> is a sequence of expressions inside braces <code class="language-plaintext highlighter-rouge">{}</code>,
 separated and optionally terminated by a semicolon <code class="language-plaintext highlighter-rouge">;</code>.
 It might look like this:</p>
@@ -966,15 +949,15 @@ as the result expression.</p>
 
   <div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
     <span class="k">while</span> <span class="n">f</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">var</span> <span class="n">x</span> <span class="o">=</span> <span class="m">10</span><span class="p">;</span>
-        <span class="k">var</span> <span class="n">y</span> <span class="o">=</span> <span class="k">if</span> <span class="n">g</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">then</span> <span class="p">{</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="m">10</span><span class="p">;</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="k">if</span> <span class="n">g</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">then</span> <span class="p">{</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="m">1</span><span class="p">;</span>
             <span class="n">x</span>
         <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
             <span class="n">g</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="p">};</span>  <span class="c"># &lt;-- (this semicolon will become optional later)</span>
         <span class="n">g</span><span class="p">(</span><span class="n">y</span><span class="p">);</span>
-    <span class="p">};</span>
+    <span class="p">};</span>  <span class="c"># &lt;------ (this too)</span>
     <span class="m">123</span>
 <span class="p">}</span>
 </code></pre></div>  </div>
@@ -984,6 +967,22 @@ Add support for these kinds of brace-delimited blocks to the parser.</p>
 
   <p>Remember to also write tests for cases that should return an error,
 such as missing semicolons.</p>
+</div>
+
+<p class="note-title">Task 6</p>
+
+<div class="note">
+  <p>Unlike Python, we want our language to distinguish between creating new variables
+and assigning to existing variables.
+A <strong>variable declaration</strong> introduces a new variable, and it should look like this:</p>
+
+  <div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span> <span class="n">x</span> <span class="o">=</span> <span class="m">123</span>
+</code></pre></div>  </div>
+
+  <p>Add support for parsing variable declarations.</p>
+
+  <p>Only allow variable declarations directly inside blocks (<code class="language-plaintext highlighter-rouge">{ ... }</code>).
+That’s because it would be unclear how to interpret e.g. <code class="language-plaintext highlighter-rouge">while var x = 3 do ...</code>.</p>
 </div>
 
 <p class="note-title">Task 7</p>
