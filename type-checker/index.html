@@ -610,11 +610,12 @@ complete support for the following:</p>
   <ul>
     <li>literals</li>
     <li>variables</li>
+    <li><em>untyped</em> variable declarations <code class="language-plaintext highlighter-rouge">var x = ...</code>.
+(The next task will handle <em>typed</em> variable declarations <code class="language-plaintext highlighter-rouge">var x: Type = ...</code>)</li>
+    <li>assignment <code class="language-plaintext highlighter-rouge">x = ...</code> (the assigned value must have the same type as the variable)</li>
     <li>unary and binary operators (with <code class="language-plaintext highlighter-rouge">==</code> and <code class="language-plaintext highlighter-rouge">!=</code> as special cases as discussed <a href="#about-polymorphism">above</a>)</li>
     <li>function calls</li>
     <li>blocks</li>
-    <li><em>untyped</em> variable declarations <code class="language-plaintext highlighter-rouge">var x = ...</code>.
-(The next task will handle <em>typed</em> variable declarations <code class="language-plaintext highlighter-rouge">var x: Type = ...</code>)</li>
     <li><code class="language-plaintext highlighter-rouge">if</code> and <code class="language-plaintext highlighter-rouge">while</code> expressions</li>
   </ul>
 
