@@ -471,7 +471,7 @@ Don’t worry about understanding the details just yet.</p>
         <span class="k">.extern</span> <span class="nv">printf</span>
         <span class="k">.extern</span> <span class="nv">scanf</span>
 
-        <span class="k">.text</span>  <span class="c1"># Begins code and data</span>
+        <span class="k">.section</span> <span class="nv">.text</span>  <span class="c1"># Begins code and data</span>
 <span class="c1"># Label that marks beginning of main function</span>
 <span class="nl">main:</span>
         <span class="c1"># Function stack setup</span>
@@ -881,8 +881,9 @@ and maps each IR variable to a stack location.</p>
 <p><em>You are now ready to do <a href="#task1">task 1</a>.</em></p>
 
 <p>To create an instance of <code class="language-plaintext highlighter-rouge">Locals</code>, we will need to find all IR variables used by
-our IR instructions. You can use <span data-aside="get_all_ir_variables">this function</span>
-to do so, or implement it yourself.</p>
+our IR instructions. You can use
+<span data-aside="get_all_ir_variables">this implementation of <code class="language-plaintext highlighter-rouge">get_all_ir_variables</code></span>,
+or implement it yourself.</p>
 
 <aside id="get_all_ir_variables">
 
