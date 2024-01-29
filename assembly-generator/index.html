@@ -465,11 +465,14 @@ the address held in register <code class="language-plaintext highlighter-rouge">
 <p>Put the following code into a file <code class="language-plaintext highlighter-rouge">asmprogram.s</code>.
 Don’t worry about understanding the details just yet.</p>
 
-<div id="asmprogram-template" class="language-gnuasm highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        <span class="k">.global</span> <span class="nv">main</span>
+<div id="asmprogram-template" class="language-gnuasm highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        <span class="c1"># Metadata for debuggers and other tools</span>
+        <span class="k">.global</span> <span class="nv">main</span>
         <span class="k">.type</span> <span class="nv">main</span><span class="p">,</span> <span class="no">@function</span>
         <span class="k">.extern</span> <span class="nv">printf</span>
+        <span class="k">.extern</span> <span class="nv">scanf</span>
 
-        <span class="k">.text</span>
+        <span class="k">.text</span>  <span class="c1"># Begins code and data</span>
+<span class="c1"># Label that marks beginning of main function</span>
 <span class="nl">main:</span>
         <span class="c1"># Function stack setup</span>
         <span class="nf">pushq</span> <span class="nb">%rbp</span>
@@ -477,22 +480,23 @@ Don’t worry about understanding the details just yet.</p>
         <span class="nf">subq</span> <span class="kc">$</span><span class="mi">128</span><span class="p">,</span> <span class="nb">%rsp</span>  <span class="c1"># Reserve 128 bytes of stack space</span>
 
         <span class="c1"># Read an integer into -8(%rbp)</span>
-        <span class="nf">movq</span> <span class="no">$scan_format</span><span class="p">,</span> <span class="nb">%rdi</span>
-        <span class="nf">leaq</span> <span class="o">-</span><span class="mi">8</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">),</span> <span class="nb">%rsi</span>
+        <span class="nf">movq</span> <span class="no">$scan_format</span><span class="p">,</span> <span class="nb">%rdi</span>  <span class="c1"># 1st param: "%ld"</span>
+        <span class="nf">leaq</span> <span class="o">-</span><span class="mi">8</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">),</span> <span class="nb">%rsi</span>      <span class="c1"># 2nd param: (%rbp - 8)</span>
         <span class="nf">call</span> <span class="nv">scanf</span>
         <span class="c1"># If the input was invalid, jump to end</span>
         <span class="nf">cmpq</span> <span class="kc">$</span><span class="mi">1</span><span class="p">,</span> <span class="nb">%rax</span>
         <span class="nf">jne</span> <span class="nv">.Lend</span>
 
         <span class="c1"># *** REPLACE THESE TWO LINES WITH YOUR CODE ***</span>
-        <span class="nf">movq</span> <span class="o">-</span><span class="mi">8</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">),</span> <span class="nb">%rsi</span>
-        <span class="nf">imulq</span> <span class="kc">$</span><span class="mi">2</span><span class="p">,</span> <span class="nb">%rsi</span>  <span class="c1"># Example: double the input</span>
+        <span class="nf">movq</span> <span class="o">-</span><span class="mi">8</span><span class="p">(</span><span class="nb">%rbp</span><span class="p">),</span> <span class="nb">%rsi</span>  <span class="c1"># Copy input number to `%rsi`</span>
+        <span class="nf">imulq</span> <span class="kc">$</span><span class="mi">2</span><span class="p">,</span> <span class="nb">%rsi</span>  <span class="c1"># Double the input</span>
 
         <span class="c1"># Call function 'printf("%ld\n", %rsi)'</span>
         <span class="c1"># to print the number in %rsi.</span>
         <span class="nf">movq</span> <span class="no">$print_format</span><span class="p">,</span> <span class="nb">%rdi</span>
         <span class="nf">call</span> <span class="nv">printf</span>
 
+<span class="c1"># Labels starting with ".L" are only visible inside this module</span>
 <span class="nl">.Lend:</span>
         <span class="c1"># Return from main with status code 0</span>
         <span class="nf">movq</span> <span class="kc">$</span><span class="mi">0</span><span class="p">,</span> <span class="nb">%rax</span>
@@ -500,6 +504,7 @@ Don’t worry about understanding the details just yet.</p>
         <span class="nf">popq</span> <span class="nb">%rbp</span>
         <span class="nf">ret</span>
 
+<span class="c1"># String data that we pass to functions 'scanf' and 'printf'</span>
 <span class="nl">scan_format:</span>
         <span class="k">.asciz</span> <span class="s">"%ld"</span>
 <span class="nl">print_format:</span>
@@ -941,10 +946,7 @@ reserved by <a href="#tracking-the-stack"><code class="language-plaintext highli
 <p>The rest of the output consists of instructions generated from each IR instruction.
 Here is a partial implementation:</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">generate_assembly</span><span class="p">(</span>
-    <span class="n">instructions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ir</span><span class="p">.</span><span class="n">Instruction</span><span class="p">],</span>
-    <span class="n">source_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="bp">None</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">generate_assembly</span><span class="p">(</span><span class="n">instructions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ir</span><span class="p">.</span><span class="n">Instruction</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">def</span> <span class="nf">emit</span><span class="p">(</span><span class="n">line</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span> <span class="n">lines</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
 
