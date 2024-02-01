@@ -451,9 +451,11 @@ operators may still have a valid use in micro-optimization.</p>
 or you can extend the definition of <code class="language-plaintext highlighter-rouge">Value</code> to allow <strong>macros</strong>: special kinds of
 operators/functions that can choose when and if to evaluate each of their arguments.</p>
 
-  <p><strong>Hint</strong>: to unit test this, you can replace the <code class="language-plaintext highlighter-rouge">print_int</code> function in the symbol table
-that your test gives to <code class="language-plaintext highlighter-rouge">interpret</code>. The replacement <code class="language-plaintext highlighter-rouge">print_int</code> can append the printed value
-to a list, and then you can assert about the contents of that list.</p>
+  <p><strong>Hint</strong>: to unit test this, you can use test programs like this:</p>
+  <div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span> <span class="n">evaluated_right_hand_side</span> <span class="o">=</span> <span class="no">false</span><span class="p">;</span>
+<span class="no">true</span> <span class="o">or</span> <span class="p">{</span> <span class="n">evaluated_right_hand_side</span> <span class="o">=</span> <span class="no">true</span><span class="p">;</span> <span class="no">true</span> <span class="p">};</span>
+<span class="n">evaluated_right_hand_side</span>  <span class="c"># Should be false</span>
+</code></pre></div>  </div>
 </div>
 
 <p class="note-title">Task 5</p>
