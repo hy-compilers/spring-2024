@@ -72,7 +72,7 @@ def remainder(a: IntrinsicArgs) -> None:
     a.emit('cqto')
     a.emit(f'idivq {a.arg_refs[1]}')
     if a.result_register != '%rdx':
-        a.emit(f'mov %rdx, {a.result_register}')
+        a.emit(f'movq %rdx, {a.result_register}')
 
 
 @_intrinsic("==")
