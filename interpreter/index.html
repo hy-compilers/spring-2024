@@ -254,7 +254,7 @@ sooner rather than later.</p>
 
 <p>Let’s look at the AST for the following expression</p>
 
-<div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="m">10</span> <span class="k">then</span> <span class="n">print_int</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="m">10</span><span class="p">)</span> <span class="k">else</span> <span class="n">print_int</span><span class="p">(</span><span class="m">0</span><span class="p">)</span>
+<div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="m">10</span> <span class="k">then</span> <span class="n">print_int</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="m">7</span><span class="p">)</span> <span class="k">else</span> <span class="n">print_int</span><span class="p">(</span><span class="m">0</span><span class="p">)</span>
 </code></pre></div></div>
 
 <object data="../graphs/04-interpreter/ast.svg" type="image/svg+xml"></object>
@@ -262,7 +262,7 @@ sooner rather than later.</p>
 <p>The AST has the following types of nodes:</p>
 
 <ul>
-  <li>Constant literals: <code class="language-plaintext highlighter-rouge">10</code> and <code class="language-plaintext highlighter-rouge">0</code>.</li>
+  <li>Constant literals: <code class="language-plaintext highlighter-rouge">10</code>, <code class="language-plaintext highlighter-rouge">7</code> and <code class="language-plaintext highlighter-rouge">0</code>.</li>
   <li>Variables: <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">print_int</code></li>
   <li>Operators: <code class="language-plaintext highlighter-rouge">&lt;</code> and <code class="language-plaintext highlighter-rouge">+</code></li>
   <li>Function calls: <code class="language-plaintext highlighter-rouge">name(arguments)</code></li>
