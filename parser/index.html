@@ -981,8 +981,9 @@ A <strong>variable declaration</strong> introduces a new variable, and it should
 
   <p>Add support for parsing variable declarations.</p>
 
-  <p>Only allow variable declarations directly inside blocks (<code class="language-plaintext highlighter-rouge">{ ... }</code>).
-(This will make later parts simpler, since we won’t have to consider which scope
+  <p>Only allow variable declarations directly inside blocks (<code class="language-plaintext highlighter-rouge">{ ... }</code>)
+and in top-level expressions. (This will make later parts simpler,
+since we won’t have to consider which scope
 expressions like <code class="language-plaintext highlighter-rouge">if ... then var x = 3</code> put the <code class="language-plaintext highlighter-rouge">x</code> in.)</p>
 </div>
 
