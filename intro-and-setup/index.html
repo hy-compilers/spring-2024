@@ -241,6 +241,78 @@ our examples and instructions are for Python.</p>
 <a href="../assets/ext/downloads/compilers-project.tar.gz">download a project template</a>
 and follow the instructions in <code class="language-plaintext highlighter-rouge">README.md</code> to set it up.</p>
 
+<h3 id="additional-instructions-for-macos">Additional instructions for MacOS</h3>
+
+<p>You can get pretty far with just MacOS, but ultimately the project requires you to generate
+and test Assembly code for x86-64 Linux. Below are some ways to get an x86-64 Linux command line
+that can see your project files.</p>
+
+<h4 id="method-1-remote-development">Method 1: Remote development</h4>
+
+<p>If you have access to an x86-64 Linux machine, you can develop on that via SSH.
+VSCode has a ”Remote - SSH” extension that can make this fairly seamless
+(<a href="https://code.visualstudio.com/docs/remote/ssh">Instructions</a>).</p>
+
+<h4 id="method-2-docker-for-automated-linux-vm-setup">Method 2: Docker for automated Linux VM setup</h4>
+
+<ol>
+  <li><a href="https://docs.docker.com/desktop/install/mac-install/">Install Docker Desktop</a>
+    <ul>
+      <li>On Apple Silicon Macs, install Rosetta: <code class="language-plaintext highlighter-rouge">softwareupdate --install-rosetta</code></li>
+    </ul>
+  </li>
+  <li>Open Docker Desktop and complete the configuration wizard.
+    <ul>
+      <li>You don’t need to sign in.</li>
+      <li>You can skip the survey.</li>
+    </ul>
+  </li>
+  <li>In your project, create a file called <code class="language-plaintext highlighter-rouge">Dockerfile</code> with the following contents:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> FROM --platform=linux/amd64 debian:12
+
+ RUN apt-get update \
+ &amp;&amp; apt-get install -y build-essential python3 curl git zlib1g-dev libssl-dev libbz2-dev libffi-dev libreadline-dev liblzma-dev libsqlite3-dev \
+ &amp;&amp; apt-get clean
+
+ RUN curl https://pyenv.run | bash \
+ &amp;&amp; echo 'export PYENV_ROOT="$HOME/.pyenv"' &gt;&gt; ~/.bash_python_setup \
+ &amp;&amp; echo '[[ -d $PYENV_ROOT/bin ]] &amp;&amp; export PATH="$PYENV_ROOT/bin:$PATH"' &gt;&gt; ~/.bash_python_setup \
+ &amp;&amp; echo 'eval "$(pyenv init -)"' &gt;&gt; ~/.bash_python_setup \
+ &amp;&amp; echo 'source ~/.bash_python_setup' &gt;&gt; ~/.bashrc \
+ &amp;&amp; echo 'source ~/.bash_python_setup' &gt;&gt; ~/.profile
+
+ COPY .python-version /project/
+ RUN cd /project &amp;&amp; bash -lc 'pyenv install'
+
+ RUN curl -sSL https://install.python-poetry.org | python3 - \
+ &amp;&amp; echo 'export PATH="$HOME/.local/bin:$PATH"' &gt;&gt; ~/.bash_python_setup
+
+ COPY pyproject.toml poetry.lock /project
+ RUN cd /project &amp;&amp; bash -lc 'poetry install' &amp;&amp; rm -Rf /project &amp;&amp; mkdir -p /project
+
+ WORKDIR /project
+</code></pre></div>    </div>
+  </li>
+  <li>Run the following command to open a Linux shell in your project (the first run may take a while):
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> docker build <span class="nt">-t</span> compilers-dev:latest <span class="nb">.</span> <span class="o">&amp;&amp;</span> <span class="se">\</span>
+   docker run <span class="nt">-it</span> <span class="nt">--rm</span> <span class="nt">-v</span> .:/project compilers-dev:latest
+</code></pre></div>    </div>
+  </li>
+  <li>Now you have an x86-64 Linux command line where you can see your code in directory <code class="language-plaintext highlighter-rouge">/project</code>
+and run the project’s usual commands like <code class="language-plaintext highlighter-rouge">./check.sh</code> and <code class="language-plaintext highlighter-rouge">./compiler.sh ...</code>.
+    <ul>
+      <li>Any changes you make in the Linux environment outside of <code class="language-plaintext highlighter-rouge">/project</code> will be lost.
+To make permanent changes, edit the <code class="language-plaintext highlighter-rouge">Dockerfile</code> and restart the Linux environment.</li>
+    </ul>
+  </li>
+</ol>
+
+<h4 id="method-3-full-linux-vm">Method 3: Full Linux VM</h4>
+
+<p>You can run a full Linux desktop in a virtual machine using e.g. <a href="https://mac.getutm.app/">UTM</a>.
+In this option you could do all your development in the virtual machine window,
+or you could combine this with method 1 and develop in the VM over SSH.</p>
+
 </article>
       <footer>
         <img src="/spring-2024/assets/img/hy_logo.svg">
