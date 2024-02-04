@@ -258,21 +258,24 @@ instead calling a known method directly.</p>
     </aside>
   </li>
   <li>Detecting unreachable code.</li>
-  <li>Detecting use of uninitialized variables (not possible in our language).</li>
+  <li>Detecting use of uninitialized variables (which are not possible in our language).</li>
   <li>Liveness analysis: which variables may still be read after a given point in the program?</li>
   <li>Reaching definitions: which code locations might have last written to a given variable.</li>
   <li>Alias analysis: when might two pointers point to the same object?</li>
-  <li>Escape analysis: does a function use a value only temporarily, or does it store it somewhere?</li>
+  <li>Escape analysis: might a function, given a pointer, store it in a place that
+persists after the function exits?</li>
   <li>Data dependence analysis: which parts of the program might affect a variable’s value?</li>
 </ul>
 
 <p>Examples of optimizations that require program analysis:</p>
 <ul>
   <li>Constant propagation: translating <code class="language-plaintext highlighter-rouge">x = 3; ...; f(x);</code> into <code class="language-plaintext highlighter-rouge">...; f(3);</code>
-requires knowing that <code class="language-plaintext highlighter-rouge">x</code> can only have the value <code class="language-plaintext highlighter-rouge">3</code> in <code class="language-plaintext highlighter-rouge">f(x)</code>.</li>
-  <li>Register allocation: freeing registers early, if liveness analysis indicates that it’s safe.</li>
+requires knowing that <code class="language-plaintext highlighter-rouge">x</code> can only have the value <code class="language-plaintext highlighter-rouge">3</code> in <code class="language-plaintext highlighter-rouge">f(x)</code>.
+Reaching definitions provides this.</li>
+  <li>Register allocation: freeing registers early, as soon as liveness analysis says they’re
+no longer used.</li>
   <li>Copy elision: copies of large objects can sometimes be turned into references through pointers.
-Requires escape analysis and a check for writes.</li>
+Requires proving that the copy is never written to.</li>
   <li>Allocation elimination: <a href="../project/#heap-allocation-5p">heap-allocation</a> can sometimes
 be turned into stack allocation. Requires escape analysis.</li>
   <li>Instruction-level parallelism: instructions that the CPU can likely execute in parallel
