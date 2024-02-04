@@ -294,6 +294,14 @@
       
         
           <li>
+            <a href="/spring-2024/project/#dead-code-elimination-5p"
+              data-anchor="dead-code-elimination-5p"
+            >Dead code elimination (5p)</a>
+          </li>
+        
+      
+        
+          <li>
             <a href="/spring-2024/project/#grading-guidelines"
               data-anchor="grading-guidelines"
             >Grading guidelines</a>
@@ -1203,17 +1211,18 @@ you just removed.</p>
 <p>Constant folding means evaluating expressions using only constant values,
 such as <code class="language-plaintext highlighter-rouge">1 + 2</code> at compile-time.</p>
 
-<p>Let’s define a function and operator to be <strong>pure</strong> if it only
+<p id="pure-operation">Let’s define a function or operator to be <strong>pure</strong> if it only
 uses its parameters, constants, and other pure functions or operators.
 (The built-in operators are all pure, but the builtin <code class="language-plaintext highlighter-rouge">print_...</code> and <code class="language-plaintext highlighter-rouge">read_...</code>
 functions are not.)</p>
 
 <p>Recursively find AST subtrees that only use constants and pure functions
 or operators, and use the interpreter to evaluate these subtrees and replace
-them with literals.</p>
-
-<p>It is enough to limit constant folding to AST subtrees that only use
+them with literals. It is enough to limit constant folding to AST subtrees that only use
 base language features and function calls.</p>
+
+<p><strong>Note</strong>: if you intend to do the bonus task, read it first, as the recommended
+approach there is to do constant folding at the IR level instead of on the AST.</p>
 
 <p class="note-title">Bonus task</p>
 
@@ -1236,12 +1245,15 @@ propagation with constant folding because our constant propagation works at the 
   <ol>
     <li>We could make constant propagation work at the AST level, either by
       <ol>
-        <li>doing it in some very simple way that doesn’t use dataflow analysis, or</li>
+        <li>doing it in some simpler way that doesn’t use dataflow analysis, or</li>
         <li>by somehow mapping the dataflow analysis results back from IR to AST.</li>
       </ol>
     </li>
     <li>(Recommended) We could write an IR-level interpreter to do constant folding
-at the IR level.</li>
+at the IR level. The interpreter should try to run starting from each constant
+loading instruction and stop if it encounters a variable whose value it can’t
+know. Any <code class="language-plaintext highlighter-rouge">Call</code> instructions that it <strong>can</strong> evaluate can be replaced by loads
+of the result.</li>
   </ol>
 
   <p>Implement any of these solutions and do constant propagation and constant folding
@@ -1286,6 +1298,19 @@ neither strategy is universally superior).</li>
   <li>Remember to test that your inliner doesn’t crash when it sees a recursive or
 mutually recursive function.</li>
 </ul>
+
+<h2 id="dead-code-elimination-5p">Dead code elimination (5p)</h2>
+
+<p>Removing code that does useless work is an optimization that is not
+very useful directly, but it’s a good cleanup after other optimizations
+such as constant folding and inlining that may leave useless code behind.</p>
+
+<p>Let’s define <strong>dead code</strong> as code that only does
+<a href="#report-useless-writes-5p">useless writes</a>
+and only calls <a href="#pure-operation">pure operations</a>.</p>
+
+<p>Write an optimization that iteratively removes dead code until it can’t
+find more.</p>
 
 <h1 id="grading-guidelines">Grading guidelines</h1>
 
