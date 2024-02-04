@@ -292,8 +292,19 @@ as well as Rust’s
 there are several advantages to performing analyses on IR by default:</p>
 <ul>
   <li>IR represents details such as internal temporary variables, which are important to account for when optimizing (e.g. when allocating registers).</li>
-  <li>IR is simpler, so writing a correct analysis is easier.</li>
-  <li>Optimizing the program based on an analysis is simpler when the analysis was done on the IR.</li>
+  <li>IR is <span data-aside="ir-simpler">simpler</span>, so writing a correct analysis is easier.
+    <aside id="ir-simpler">
+      <p>Often a large set of language features map to a few IR features.
+  For instance, various control flow constructs like <code class="language-plaintext highlighter-rouge">if-then</code>, <code class="language-plaintext highlighter-rouge">if-then-else</code>,
+  <code class="language-plaintext highlighter-rouge">while-do</code>, <code class="language-plaintext highlighter-rouge">do-while</code>, <code class="language-plaintext highlighter-rouge">for</code>, <code class="language-plaintext highlighter-rouge">continue</code>, <code class="language-plaintext highlighter-rouge">break</code>, <code class="language-plaintext highlighter-rouge">return</code> etc. all map to
+  jumps and labels.</p>
+
+      <p>An IR-based analysis would support all of these by supporting
+  just jumps and labels, whereas an AST-based analysis would have to
+  handle each construct separately.</p>
+    </aside>
+  </li>
+  <li>Similarly it’s often easier to optimize IR than it is to optimize an AST.</li>
 </ul>
 
 <p>We will start by defining some datastructures that make IR code easier to analyze
@@ -301,9 +312,9 @@ by making explicit how program execution can proceed through the code.</p>
 
 <p>A <strong>basic block</strong> is a sequence of IR instructions that is always executed from start to end.
 That is, it has no jump or return instructions, except possibly as the very last one,
-and it has no label instructions, except very first one.
-We additionally require that each basic block starts with a unique
-<code class="language-plaintext highlighter-rouge">Label</code> instruction, since these make for convenient dictionary keys.</p>
+and it has no label instructions, except the very first one.
+We require that each basic block starts with a unique
+label instruction, since these make for convenient dictionary keys.</p>
 
 <p><em>You are now ready to do <a href="#task1">task 1</a>.</em></p>
 
@@ -312,7 +323,7 @@ possible jumps between those blocks. That is, if basic block labeled <code class
 ends in a <code class="language-plaintext highlighter-rouge">Jump</code> to label <code class="language-plaintext highlighter-rouge">B</code>, then there shall be an edge from <code class="language-plaintext highlighter-rouge">A</code> to <code class="language-plaintext highlighter-rouge">B</code>.
 If it’s a <code class="language-plaintext highlighter-rouge">CondJump</code> then there shall be an edge to both possible target labels.
 If the basic block doesn’t end in a jump or a return, then there shall be an edge
-to the following basic block (and if it doesn’t exist, it’s an error).</p>
+to the following basic block (and if one doesn’t exist, it’s an error).</p>
 
 <p><em>You are now ready to do <a href="#task2">task 2</a>.</em></p>
 
@@ -331,13 +342,13 @@ The system can then answer queries about whether a given fact is provable
 from the given base facts and rules.</p>
 
   <p><a href="https://en.wikipedia.org/wiki/Datalog">Datalog</a> is a logic programming language
-with restrictions that make it amenable for powerful optimizations.
+with restrictions that make it amenable to very efficient execution.
 Variants of Datalog, such as <a href="https://souffle-lang.github.io/">Souffle</a>,
 have become popular for program analysis, because it turns out that
 program analysis questions are quite natural to formulate as logic programs.</p>
 
-  <p>This arguably has advantages in run-time efficiency of the analysis
-and ease of composing different analyses.</p>
+  <p>This arguably makes it easier to write and compose different analyses,
+and it may improve the run-time efficiency and concurrency of the analyses.</p>
 
   <p>We don’t take the logic programming approach here, because learning
 logic programming right now would be impractical and distracting,
@@ -358,10 +369,10 @@ IR instructions where <code class="language-plaintext highlighter-rouge">x</code
 
 <p>Reaching definitions is useful for optimizations like constant propagation:
 if we know that <code class="language-plaintext highlighter-rouge">x</code> can only be set to a single constant, we can replace
-a copy of <code class="language-plaintext highlighter-rouge">x</code> with a load of a constant near where it’s used.
-This frees up the storage location of <code class="language-plaintext highlighter-rouge">x</code> in the code preceding the use sites.</p>
+a use of <code class="language-plaintext highlighter-rouge">x</code> with a load of a constant near where it’s used.
+This frees up the storage location of <code class="language-plaintext highlighter-rouge">x</code> in the code preceding the use site.</p>
 
-<p>We’ll use this program as an example for reaching definitions:
+<p>We’ll use this program as an example whose reaching definitions we calculate:
 <!-- TODO: graphviz this? --></p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Label</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
@@ -388,7 +399,13 @@ is that:</p>
 </ul>
 
 <p>Let’s see how to write an analysis that reaches this conclusion.
-Here is pseudocode that we’ll soon generalize into the dataflow framework:</p>
+The idea is that at each instruction, for each variable, we keep track of
+all possible places where the variable might have last been set.
+We propagate this information from one instruction to the next,
+and across jumps. We repeat this until nothing changes any more.</p>
+
+<p>Here is pseudocode for this approach. Afterwards, we’ll generalize much of this
+into the dataflow framework, of which reaching definitions will be just one instantiation.</p>
 
 <ol>
   <li>Define the type <code class="language-plaintext highlighter-rouge">State</code> to be a dictionary of IR variable names to sets of
@@ -399,20 +416,23 @@ These define the <strong>input and output states</strong> of each instruction.</
 the special value <code class="language-plaintext highlighter-rouge">-1</code>, signifying ”uninitialized”,
 and each parameter and global variable is set to <code class="language-plaintext highlighter-rouge">-2</code>, signifying ”predefined”.</li>
   <li>Define a <strong>transfer function</strong> <code class="language-plaintext highlighter-rouge">transfer</code> that takes an input state and
-produces an output state for a given instruction <code class="language-plaintext highlighter-rouge">i</code>.
+produces an output state for a given instruction index <code class="language-plaintext highlighter-rouge">i</code>.
 The transfer function should return an output state that is the
 same as the input state, except all variables <code class="language-plaintext highlighter-rouge">x</code> that the instruction
-<code class="language-plaintext highlighter-rouge">i</code> writes to should be mapped to the set <code class="language-plaintext highlighter-rouge">{i}</code>.
-This means: right after instruction <code class="language-plaintext highlighter-rouge">i</code>, <code class="language-plaintext highlighter-rouge">x</code> can only have been last set at <code class="language-plaintext highlighter-rouge">i</code>.</li>
+at <code class="language-plaintext highlighter-rouge">i</code> writes to should be mapped to the set <code class="language-plaintext highlighter-rouge">{i}</code>.
+This means: if the instruction at <code class="language-plaintext highlighter-rouge">i</code> writes to variable <code class="language-plaintext highlighter-rouge">x</code>, then
+right after the instruction at <code class="language-plaintext highlighter-rouge">i</code>, <code class="language-plaintext highlighter-rouge">x</code> can only have been last set at <code class="language-plaintext highlighter-rouge">i</code>.</li>
   <li>Repeat the following until there are no changes to <code class="language-plaintext highlighter-rouge">in</code> and <code class="language-plaintext highlighter-rouge">out</code>:
     <ul>
       <li>For any <code class="language-plaintext highlighter-rouge">in[i]</code> that has changed,<br />
-set <code class="language-plaintext highlighter-rouge">out[i] = transfer(i, in[i])</code>.</li>
+set <code class="language-plaintext highlighter-rouge">out[i] = transfer(i, in[i])</code>,<br />
+and if <code class="language-plaintext highlighter-rouge">i+1</code> is in the same basic block,
+then set <code class="language-plaintext highlighter-rouge">in[i+1] = out[i]</code>.</li>
       <li>For each label instruction index <code class="language-plaintext highlighter-rouge">i</code>,<br />
-let <code class="language-plaintext highlighter-rouge">J</code> be the set of jump instructions that might jump to <code class="language-plaintext highlighter-rouge">i</code>.</li>
-      <li>If any <code class="language-plaintext highlighter-rouge">out[j]</code> for any <code class="language-plaintext highlighter-rouge">j</code> in <code class="language-plaintext highlighter-rouge">J</code> has changed,<br />
+let <code class="language-plaintext highlighter-rouge">J</code> be the set of jump instructions that might jump to <code class="language-plaintext highlighter-rouge">i</code>.<br />
+If any <code class="language-plaintext highlighter-rouge">out[j]</code> for any <code class="language-plaintext highlighter-rouge">j</code> in <code class="language-plaintext highlighter-rouge">J</code> has changed,<br />
 set <code class="language-plaintext highlighter-rouge">in[i] = merge(out[j] for each j in J)</code>
-where <code class="language-plaintext highlighter-rouge">merge</code> is the set union function.</li>
+where <code class="language-plaintext highlighter-rouge">merge</code> takes the union of the given sets.</li>
     </ul>
   </li>
 </ol>
@@ -437,14 +457,16 @@ reaching definitions. We just leave the following things abstract:</p>
 These define the <strong>input and output states</strong> of each instruction.</li>
   <li>Initialize <code class="language-plaintext highlighter-rouge">in[0]</code> based on globals and function parameters.</li>
   <li>Define a <strong>transfer function</strong> <code class="language-plaintext highlighter-rouge">transfer</code> that takes an input state and
-produces an output state for a given instruction <code class="language-plaintext highlighter-rouge">i</code>.</li>
+produces an output state for a given instruction index <code class="language-plaintext highlighter-rouge">i</code>.</li>
   <li>Repeat the following until there are no changes to <code class="language-plaintext highlighter-rouge">in</code> and <code class="language-plaintext highlighter-rouge">out</code>:
     <ul>
       <li>For any <code class="language-plaintext highlighter-rouge">in[i]</code> that has changed,<br />
-set <code class="language-plaintext highlighter-rouge">out[i] = transfer(i, in[i])</code>.</li>
+set <code class="language-plaintext highlighter-rouge">out[i] = transfer(i, in[i])</code>,<br />
+and if <code class="language-plaintext highlighter-rouge">i+1</code> is in the same basic block,
+then set <code class="language-plaintext highlighter-rouge">in[i+1] = out[i]</code>.</li>
       <li>For each label instruction index <code class="language-plaintext highlighter-rouge">i</code>,<br />
-let <code class="language-plaintext highlighter-rouge">J</code> be the set of jump instructions that might jump to <code class="language-plaintext highlighter-rouge">i</code>.</li>
-      <li>If any <code class="language-plaintext highlighter-rouge">out[j]</code> for any <code class="language-plaintext highlighter-rouge">j</code> in <code class="language-plaintext highlighter-rouge">J</code> has changed,<br />
+let <code class="language-plaintext highlighter-rouge">J</code> be the set of jump instructions that might jump to <code class="language-plaintext highlighter-rouge">i</code>.<br />
+If any <code class="language-plaintext highlighter-rouge">out[j]</code> for any <code class="language-plaintext highlighter-rouge">j</code> in <code class="language-plaintext highlighter-rouge">J</code> has changed,<br />
 set <code class="language-plaintext highlighter-rouge">in[i] = merge(out[j] for each j in J)</code>.</li>
     </ul>
   </li>
