@@ -535,7 +535,7 @@ instead of trying to abstract the direction of dataflow.</p>
 <h2 id="properties-of-program-analyses">Properties of program analyses</h2>
 
 <p>When using the dataflow framework, it’s good to be aware of the main ways
-in which analysis quality and usefulness is measured.</p>
+in which analyses are classified and evaluated.</p>
 
 <p>Two program analyses that describe the same property of a program can have different:</p>
 <ul>
@@ -555,7 +555,7 @@ roughly exponentially with program size.</p>
 <p>Program analyses can be thought of as proving facts about the program,
 but they can sometimes fail to find proofs for some true facts.</p>
 
-<p>A typical example looks like this:</p>
+<p>Consider this example:</p>
 
 <div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
     <span class="k">var</span> <span class="n">x</span> <span class="o">=</span> <span class="m">3</span><span class="p">;</span>
@@ -567,7 +567,7 @@ but they can sometimes fail to find proofs for some true facts.</p>
 
 <p>It is true that <code class="language-plaintext highlighter-rouge">x</code> is never accessed, but for liveness analysis to prove it,
 it must know that <code class="language-plaintext highlighter-rouge">1 == 2</code> is always false, and therefore the <code class="language-plaintext highlighter-rouge">then</code>-clause is
-never executed etc. Many liveness analyses <em>can</em> do that, but we can
+never executed etc. Some liveness analyses <em>can</em> do that, but we can
 <span data-aside="halting-problem">always</span> invent more complicated scenarios.</p>
 
 <aside id="halting-problem">
@@ -576,8 +576,11 @@ Is <code class="language-plaintext highlighter-rouge">f(y)</code> ever executed?
 <a href="https://en.wikipedia.org/wiki/Halting_problem">halting problem</a>
 for <code class="language-plaintext highlighter-rouge">f(x);</code> to know for sure.</p>
 
-  <p>Using similar appeals to the halting problem, we can easily prove
-most program analyses to be imperfect in the strictest sense.</p>
+  <p>Using similar appeals to the halting problem, we can prove most program analyses
+to be imperfect in the strictest sense.
+Indeed the incredibly general
+<a href="https://en.wikipedia.org/wiki/Rice%27s_theorem">Rice’s theorem</a>
+pretty much states this directly.</p>
 </aside>
 
 <h3 id="conservatism">Conservatism</h3>
@@ -621,13 +624,31 @@ For instance, alias analysis can inform liveness analysis like this:</p>
 
   <p>Ordinarily liveness analysis has to conservatively consider expression
 <code class="language-plaintext highlighter-rouge">*p</code> as possibly reading the value of <code class="language-plaintext highlighter-rouge">x</code>, unless it can prove
-that <code class="language-plaintext highlighter-rouge">p</code> cannot point to <code class="language-plaintext highlighter-rouge">x</code>.</p>
+that <code class="language-plaintext highlighter-rouge">p</code> cannot point to <code class="language-plaintext highlighter-rouge">x</code>. Alias analysis may be able to give that proof:</p>
 
-  <p>If the address of <code class="language-plaintext highlighter-rouge">x</code> is never taken, then that’s an easy proof that <code class="language-plaintext highlighter-rouge">p</code> cannot point to <code class="language-plaintext highlighter-rouge">x</code>.</p>
+  <ul>
+    <li>If the address of <code class="language-plaintext highlighter-rouge">x</code> is never taken, then it’s
+<span data-aside="pointer-arithmetic">trivial</span> that <code class="language-plaintext highlighter-rouge">p</code> cannot point to <code class="language-plaintext highlighter-rouge">x</code></li>
+    <li>If the address of <code class="language-plaintext highlighter-rouge">x</code> <em>is</em> sometimes taken,
+then an alias analysis might still be able to prove that the address of
+<code class="language-plaintext highlighter-rouge">x</code> can never be assigned to <code class="language-plaintext highlighter-rouge">p</code>.</li>
+  </ul>
 
-  <p>If the address of <code class="language-plaintext highlighter-rouge">x</code> <em>is</em> sometimes taken,
-then the proof that <code class="language-plaintext highlighter-rouge">p</code> still cannot point to <code class="language-plaintext highlighter-rouge">x</code> may be provided by alias analysis,
-if it sees that the address of <code class="language-plaintext highlighter-rouge">x</code> can never find its way to an assignment into <code class="language-plaintext highlighter-rouge">p</code>.</p>
+  <aside id="pointer-arithmetic">
+    <p>Even if the address of <code class="language-plaintext highlighter-rouge">x</code> is never directly taken, the language might still
+have a way to construct a pointer to <code class="language-plaintext highlighter-rouge">x</code>.</p>
+
+    <p>For instance, C allows pointers to be converted to and from integers.
+A sneaky programmer could take the address of another variable
+<code class="language-plaintext highlighter-rouge">y</code> that is just below <code class="language-plaintext highlighter-rouge">x</code> in the stack, and add 8 to that address to obtain
+the address of <code class="language-plaintext highlighter-rouge">x</code>.</p>
+
+    <p>In C, such trickery is <strong>undefined behaviour</strong>, and the compiler is allowed to
+produce programs that do arbitrary things when undefined behaviour occurs.
+This is for a very good reason: if C wanted to support these sorts of tricks,
+the compiler would no longer have the freedom to perform many optimizations,
+such as omitting <code class="language-plaintext highlighter-rouge">x</code> from the stack and keeping it only in a register.</p>
+  </aside>
 </div>
 
 <h3 id="intraprocedural-vs-interprocedural">Intraprocedural vs interprocedural</h3>
@@ -661,20 +682,20 @@ because it wouldn’t know anything about the value of <code class="language-pla
 
 <h3 id="sensitivities">Sensitivities</h3>
 
-<p>The precision of an analysis can further be classified by whether it is ”sensitive”
+<p>The precision of an analysis can further be classified by whether it’s ”sensitive”
 to certian facets of the program’s structure, or whether it ignores them.
 Here are the most common sensitivities:</p>
 
 <p>A <strong>flow-sensitive</strong> analysis declares its facts relative to some positions in the program.
-For instance, a flow-sensitive alias analysis can say <code class="language-plaintext highlighter-rouge">p1</code> and <code class="language-plaintext highlighter-rouge">p2</code> might point
-to the same object at IR instruction 7 where a flow-insensitive alias analysis merely says
-<code class="language-plaintext highlighter-rouge">p1</code> and <code class="language-plaintext highlighter-rouge">p2</code> might point to the same object <em>at some point</em>.</p>
+For instance, a flow-sensitive alias analysis might say that <code class="language-plaintext highlighter-rouge">p1</code> and <code class="language-plaintext highlighter-rouge">p2</code> might point
+to the same object <em>at IR instruction 7</em>, whereas a flow-insensitive alias analysis can merely
+say that <code class="language-plaintext highlighter-rouge">p1</code> and <code class="language-plaintext highlighter-rouge">p2</code> might point to the same object <em>at some point</em>.</p>
 
 <p>A <strong>path-sensitive</strong> analysis looks at <code class="language-plaintext highlighter-rouge">if</code>-expression conditions and incorporates
 them into its judgements. For instance, a path-sensitive alias analysis might see
 <code class="language-plaintext highlighter-rouge">if p1 != p2 then ...</code> and conclude that <code class="language-plaintext highlighter-rouge">p1</code> and <code class="language-plaintext highlighter-rouge">p2</code> cannot point to
 the same object in the <code class="language-plaintext highlighter-rouge">then</code>-clause (but might elsewhere), whereas a path-insensitive
-alias analysis would only report that <code class="language-plaintext highlighter-rouge">p1</code> and <code class="language-plaintext highlighter-rouge">p2</code> might point to the same object.</p>
+alias analysis would not take the <code class="language-plaintext highlighter-rouge">if</code>-expression’s condition into account.</p>
 
 <p>A <strong>context-sensitive</strong> analysis analyzes each function again for each different
 <strong>calling context</strong>. A calling context is <span data-aside="calling-context">typically</span>
