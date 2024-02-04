@@ -262,8 +262,6 @@ instead calling a known method directly.</p>
   <li>Liveness analysis: which variables may still be read after a given point in the program?</li>
   <li>Reaching definitions: which code locations might have last written to a given variable.</li>
   <li>Alias analysis: when might two pointers point to the same object?</li>
-  <li>Escape analysis: might a function, given a pointer, store it in a place that
-persists after the function exits?</li>
   <li>Data dependence analysis: which parts of the program might affect a variable’s value?</li>
 </ul>
 
@@ -277,7 +275,7 @@ no longer used.</li>
   <li>Copy elision: copies of large objects can sometimes be turned into references through pointers.
 Requires proving that the copy is never written to.</li>
   <li>Allocation elimination: <a href="../project/#heap-allocation-5p">heap-allocation</a> can sometimes
-be turned into stack allocation. Requires escape analysis.</li>
+be turned into stack allocation. Requires alias analysis.</li>
   <li>Instruction-level parallelism: instructions that the CPU can likely execute in parallel
 with other instructions can sometimes be moved closer to each other.
 Requires data dependence analysis.</li>
