@@ -482,8 +482,9 @@ where data flows in reverse: from <code class="language-plaintext highlighter-ro
 
 <p>This is used by e.g. liveness analysis i.e.
 ”which variables may still be read after a given point in the program?”
-The idea in liveness analysis is to look backwards through the program
-and let a read of a variable introduce it into the state while a write removes it.</p>
+The idea in liveness analysis similar to reaching definitions, except in reverse:
+it looks <em>backwards</em> through the program, and lets a read of a variable introduce
+the variable into the state while a write removes it.</p>
 
 <h2 id="tasks">Tasks</h2>
 
