@@ -259,7 +259,7 @@ instead calling a known method directly.</p>
   </li>
   <li>Detecting unreachable code.</li>
   <li>Detecting use of uninitialized variables (which are not possible in our language).</li>
-  <li>Liveness analysis: which variables may still be read after a given point in the program?</li>
+  <li>Live variables analysis: which variables may still be read after a given point in the program?</li>
   <li>Reaching definitions: which code locations might have last written to a given variable.</li>
   <li>Alias analysis: when might two pointers point to the same object?</li>
   <li>Data dependence analysis: which parts of the program might affect a variable’s value?</li>
@@ -270,7 +270,7 @@ instead calling a known method directly.</p>
   <li>Constant propagation: translating <code class="language-plaintext highlighter-rouge">x = 3; ...; f(x);</code> into <code class="language-plaintext highlighter-rouge">...; f(3);</code>
 requires knowing that <code class="language-plaintext highlighter-rouge">x</code> can only have the value <code class="language-plaintext highlighter-rouge">3</code> in <code class="language-plaintext highlighter-rouge">f(x)</code>.
 Reaching definitions provides this.</li>
-  <li>Register allocation: freeing registers early, as soon as liveness analysis says they’re
+  <li>Register allocation: freeing registers early, as soon as live variables analysis says they’re
 no longer used.</li>
   <li>Copy elision: copies of large objects can sometimes be turned into references through pointers.
 Requires proving that the copy is never written to.</li>
@@ -480,9 +480,9 @@ set <code class="language-plaintext highlighter-rouge">in[i] = merge(out[j] for 
 (<a href="#task5">task 5</a> &amp; <a href="#task6">task 6</a>),
 where data flows in reverse: from <code class="language-plaintext highlighter-rouge">out</code> to <code class="language-plaintext highlighter-rouge">in</code> and from labels to jumps.</p>
 
-<p>This is used by e.g. liveness analysis i.e.
+<p>This is used by e.g. live variables analysis i.e.
 ”which variables may still be read after a given point in the program?”
-The idea in liveness analysis similar to reaching definitions, except in reverse:
+The idea in live variables analysis similar to reaching definitions, except in reverse:
 it looks <em>backwards</em> through the program, and lets a read of a variable introduce
 the variable into the state while a write removes it.</p>
 
@@ -530,7 +530,7 @@ instead of trying to abstract the direction of dataflow.</p>
 
 <p id="task6" class="note-title">Task 6</p>
 
-<p class="note">Implement liveness analysis using the backwards dataflow framework.</p>
+<p class="note">Implement live variables analysis using the backwards dataflow framework.</p>
 
 <h2 id="properties-of-program-analyses">Properties of program analyses</h2>
 
@@ -565,9 +565,9 @@ but they can sometimes fail to find proofs for some true facts.</p>
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>It is true that <code class="language-plaintext highlighter-rouge">x</code> is never accessed, but for liveness analysis to prove it,
+<p>It is true that <code class="language-plaintext highlighter-rouge">x</code> is never accessed, but for live variables analysis to prove it,
 it must know that <code class="language-plaintext highlighter-rouge">1 == 2</code> is always false, and therefore the <code class="language-plaintext highlighter-rouge">then</code>-clause is
-never executed etc. Some liveness analyses <em>can</em> do that, but we can
+never executed etc. Some live variables analyses <em>can</em> do that, but we can
 <span data-aside="halting-problem">always</span> invent more complicated scenarios.</p>
 
 <aside id="halting-problem">
@@ -589,13 +589,13 @@ pretty much states this directly.</p>
 if it outputs a claim, it <em>must</em> be sure that the claim holds.
 Otherwise optimizations that rely on its claims could break the program’s behaviour.</p>
 
-<p>For instance, liveness analysis had better be sure that a variable <code class="language-plaintext highlighter-rouge">x</code> really is
+<p>For instance, live variables analysis had better be sure that a variable <code class="language-plaintext highlighter-rouge">x</code> really is
 never read after a given point for a register allocator to safely reuse <code class="language-plaintext highlighter-rouge">x</code>’s register.</p>
 
 <p>Conversely, if a conservative analysis fails to claim something,
 we <em>cannot</em> take that as proof that the opposite is true.</p>
 
-<p>For instance, if liveness analysis does not output a claim that variable <code class="language-plaintext highlighter-rouge">x</code>
+<p>For instance, if live variables analysis does not output a claim that variable <code class="language-plaintext highlighter-rouge">x</code>
 is never read after a given point, then we <em>cannot</em> conclude that <code class="language-plaintext highlighter-rouge">x</code>
 is surely read after that point. The correct negation is
 ”<code class="language-plaintext highlighter-rouge">x</code> <em>might</em> be read after that point”.</p>
@@ -614,15 +614,15 @@ program, even though <em>we</em> can (in this case very easily) see that it is i
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p class="note-title">Example: improving liveness analysis with alias analysis</p>
+<p class="note-title">Example: improving live variables analysis with alias analysis</p>
 
 <div class="note">
   <p>The results of one program analysis can be used to improve the precision of another.
-For instance, alias analysis can inform liveness analysis like this:</p>
+For instance, alias analysis can inform live variables analysis like this:</p>
 
   <p>Say we have an integer variable <code class="language-plaintext highlighter-rouge">x</code> and a pointer variable <code class="language-plaintext highlighter-rouge">p</code>.</p>
 
-  <p>Ordinarily liveness analysis has to conservatively consider expression
+  <p>Ordinarily live variables analysis has to conservatively consider expression
 <code class="language-plaintext highlighter-rouge">*p</code> as possibly reading the value of <code class="language-plaintext highlighter-rouge">x</code>, unless it can prove
 that <code class="language-plaintext highlighter-rouge">p</code> cannot point to <code class="language-plaintext highlighter-rouge">x</code>. Alias analysis may be able to give that proof:</p>
 
