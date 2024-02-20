@@ -520,7 +520,7 @@ do anything with function definitions just yet:</p>
     <ul>
       <li>Define AST node types for function definitions and modules.</li>
       <li>Change the parser to emit a module AST node instead of an expression AST node.
-(For now it can just emit a module containing just a top-level expression and no functions.)</li>
+(For now it can emit a module containing just a top-level expression and no functions.)</li>
       <li>Change the interpreter, type-checker and IR generator to take a module AST node as input
 (For now they can ignore any functions and just work on the top-level expression.)</li>
       <li>Change the IR generator to return a dictionary of function names to instruction lists.
@@ -548,8 +548,17 @@ in addition to the top-level expression.</li>
 
 <p>Also note:</p>
 <ul>
-  <li>function calls and function return values must be correctly type-checked,</li>
-  <li>recursion and mutual recursion (<code class="language-plaintext highlighter-rouge">f</code> calls <code class="language-plaintext highlighter-rouge">g</code>, <code class="language-plaintext highlighter-rouge">g</code> calls <code class="language-plaintext highlighter-rouge">f</code>) must work.</li>
+  <li>Function calls and function return values must be correctly type-checked.</li>
+  <li>Recursion and mutual recursion (<code class="language-plaintext highlighter-rouge">f</code> calls <code class="language-plaintext highlighter-rouge">g</code>, <code class="language-plaintext highlighter-rouge">g</code> calls <code class="language-plaintext highlighter-rouge">f</code>) must work.</li>
+  <li>What happens when the function execution runs to the end without executing a <code class="language-plaintext highlighter-rouge">return</code> expression?
+You can make one of several choices:
+    <ul>
+      <li>Do nothing (call a missing <code class="language-plaintext highlighter-rouge">return</code> ”undefined behaviour” - like in C/C++)</li>
+      <li>Check at compile-time that this cannot happen (e.g. using a suitable <a href="../analysis-and-optimization/">dataflow analysis</a>)</li>
+      <li>Check for this at run-time by inserting guard code that crashes the program at the end of each function.</li>
+      <li>Make a rule that if the last expression is not a <code class="language-plaintext highlighter-rouge">return</code>, and does not end in a semicolon, then its value becomes the implicit return value.</li>
+    </ul>
+  </li>
 </ul>
 
 <h2 id="break-and-continue-5p">Break and continue (5p)</h2>
