@@ -522,7 +522,7 @@ do anything with function definitions just yet:</p>
       <li>Change the parser to emit a module AST node instead of an expression AST node.
 (For now it can just emit a module containing just a top-level expression and no functions.)</li>
       <li>Change the interpreter, type-checker and IR generator to take a module AST node as input
-(For now they can ignore any functions an just work on the top-level expression.)</li>
+(For now they can ignore any functions and just work on the top-level expression.)</li>
       <li>Change the IR generator to return a dictionary of function names to instruction lists.
 You can hard-code ”main” as the name of the top-level expression.</li>
       <li>Change the Assembly generator to take this dictionary and emit Assembly code for each
