@@ -606,7 +606,7 @@ on Linux. We’ll go through the instructions one by one.</p>
 
         <span class="c1"># ... function implementation goes here ...</span>
 
-        <span class="nf">movq</span>   <span class="nb">%rbp</span><span class="p">,</span> <span class="no">$rsp</span>
+        <span class="nf">movq</span>   <span class="nb">%rbp</span><span class="p">,</span> <span class="nb">%rsp</span>
         <span class="nf">popq</span>   <span class="nb">%rbp</span>
         <span class="nf">ret</span>
 </code></pre></div></div>
@@ -678,7 +678,7 @@ didn’t fit in registers.</li>
 </ul>
 
 <p>When we want to return from the function,
-the instructions <code class="language-plaintext highlighter-rouge">movq %rbp, $rsp</code> and <code class="language-plaintext highlighter-rouge">popq %rbp</code>
+the instructions <code class="language-plaintext highlighter-rouge">movq %rbp, %rsp</code> and <code class="language-plaintext highlighter-rouge">popq %rbp</code>
 undo what we did at the beginning:
 they restore <code class="language-plaintext highlighter-rouge">%rsp</code> and <code class="language-plaintext highlighter-rouge">%rbp</code> to how they were initially.</p>
 
