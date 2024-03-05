@@ -551,7 +551,7 @@ in addition to the top-level expression.</li>
   <li>Function calls and function return values must be correctly type-checked.</li>
   <li>Recursion and mutual recursion (<code class="language-plaintext highlighter-rouge">f</code> calls <code class="language-plaintext highlighter-rouge">g</code>, <code class="language-plaintext highlighter-rouge">g</code> calls <code class="language-plaintext highlighter-rouge">f</code>) must work.</li>
   <li>What happens when the function execution runs to the end without executing a <code class="language-plaintext highlighter-rouge">return</code> expression?
-You can make one of several choices:
+There are several possible design choices, such as:
     <ul>
       <li>Do nothing (call a missing <code class="language-plaintext highlighter-rouge">return</code> ”undefined behaviour” - like in C/C++)</li>
       <li>Check at compile-time that this cannot happen (e.g. using a suitable <a href="../analysis-and-optimization/">dataflow analysis</a>)</li>
