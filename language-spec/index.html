@@ -252,7 +252,11 @@ where <code class="language-plaintext highlighter-rouge">E</code>, <code class="
     </ul>
   </li>
   <li>Parentheses: <code class="language-plaintext highlighter-rouge">(E)</code>, used to override precedence.</li>
-  <li>Block: <code class="language-plaintext highlighter-rouge">{ E1; E2; ...; En }</code> or <code class="language-plaintext highlighter-rouge">{ E1; E2; ...; En; }</code> (may be empty, last semicolon optional)</li>
+  <li>Block: <code class="language-plaintext highlighter-rouge">{ E1; E2; ...; En }</code> or <code class="language-plaintext highlighter-rouge">{ E1; E2; ...; En; }</code> (may be empty, last semicolon optional).
+    <ul>
+      <li>Semicolons after subexpressions that end in <code class="language-plaintext highlighter-rouge">}</code> are optional.</li>
+    </ul>
+  </li>
   <li>Untyped variable declaration: <code class="language-plaintext highlighter-rouge">var ID = E</code> where <code class="language-plaintext highlighter-rouge">ID</code> is an identifier.</li>
   <li>Typed variable declaration: <code class="language-plaintext highlighter-rouge">var ID: T = E</code> where <code class="language-plaintext highlighter-rouge">ID</code> is an identifier and
 <code class="language-plaintext highlighter-rouge">T</code> is a type expression (defined below).</li>
