@@ -1163,7 +1163,7 @@ including the assembler.</p>
 
 <div class="note">
   <p>Write an end-to-end test framework where you can easily write programs
-in your language, along with assertions about what it prints.</p>
+in your language, along with inputs and expected outputs for the compiled programs.</p>
 
   <p>Here is one possible design:</p>
 
@@ -1173,7 +1173,7 @@ in your language, along with assertions about what it prints.</p>
     <li>Handle each line of a test case like this:
       <ul>
         <li>If the line is <code class="language-plaintext highlighter-rouge">input ...</code> then it defines an input to give the program.</li>
-        <li>If the line is <code class="language-plaintext highlighter-rouge">prints ...</code> then it defines an expected output.</li>
+        <li>If the line is <code class="language-plaintext highlighter-rouge">prints ...</code> then it defines an expected output that the compiled program should print.</li>
         <li>All other lines are considered part of the test program.</li>
       </ul>
     </li>
