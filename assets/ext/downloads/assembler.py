@@ -95,11 +95,8 @@ print_int:
     xorq %rax, %rax
     cmpq $0, %rdi
     je .Ljust_zero
-    jge .Lnot_negative
-    movq $1, %r9
-    negq %rdi                # Handle as positive
-
-.Lnot_negative:
+    jge .Ldigit_loop
+    incq %r9  # If < 0, set %r9 to 1
 
 .Ldigit_loop:
     cmpq $0, %rdi
@@ -112,7 +109,11 @@ print_int:
     idivq %rcx               # Sets rax = quotient and rdx = remainder
 
     movq %rax, %rdi          # The quotient becomes our remaining input
-    addl $48, %edx           # ASCII '0' = 48. Add the remainder to get the correct digit.
+    cmpq $0, %rdx            # If the remainder is negative (because the input is), negate it
+    jge .Lnot_negative
+    negq %rdx
+.Lnot_negative:
+    addq $48, %rdx           # ASCII '0' = 48. Add the remainder to get the correct digit.
     movb %dl, (%rsp)         # Store the digit in the output
     decq %rsp
     jmp .Ldigit_loop
