@@ -207,10 +207,6 @@ read_int:
 
     # Loop until a newline or end of input is encountered
 .Lloop:
-    decq %rsi
-    cmpq %rsp, %rsi
-    je .Lend
-
     # Call syscall 'read'
     xorq %rax, %rax      # syscall number for read = 0
     xorq %rdi, %rdi      # file handle for stdin = 0
