@@ -197,8 +197,10 @@ false_str_len = . - false_str
 read_int:
     pushq %rbp           # Save previous stack frame pointer
     movq %rsp, %rbp      # Set stack frame pointer
-    subq $16, %rsp       # Reserve space for input
-                         # (we only need 1 byte, but getting 16 for alignment)
+    pushq %r12           # Back up r12 since it's callee-saved
+    pushq $0             # Reserve space for input
+                         # (we only write the lowest byte,
+                         # but loading 64-bits at once is easier)
 
     xorq %r9, %r9        # Clear r9 - it'll store the minus sign
     xorq %r10, %r10      # Clear r10 - it'll accumulate our output
@@ -263,6 +265,7 @@ read_int:
     neg %r10
 .Lfinal_negation_done:
     # Restore stack registers and return the result
+    popq %r12
     movq %rbp, %rsp
     popq %rbp
     movq %r10, %rax
