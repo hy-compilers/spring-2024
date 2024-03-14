@@ -426,8 +426,10 @@ The result of expression evaluation is a value and optionally a modification of 
   </li>
   <li>While-loop <code class="language-plaintext highlighter-rouge">while E1 do E2</code>:
     <ul>
-      <li>if the value of <code class="language-plaintext highlighter-rouge">E1</code> is true, evaluate <code class="language-plaintext highlighter-rouge">E2</code> and repeat evaluation of the while-loop</li>
+      <li>if the value of <code class="language-plaintext highlighter-rouge">E1</code> is true, evaluate <code class="language-plaintext highlighter-rouge">E2</code>, discard its return value,
+and then start evaluating the while-loop again</li>
       <li>if the value of <code class="language-plaintext highlighter-rouge">E1</code> is false, return <code class="language-plaintext highlighter-rouge">unit</code></li>
+      <li>if the value of <code class="language-plaintext highlighter-rouge">E1</code> is something else, fail</li>
     </ul>
   </li>
   <li>Function call <code class="language-plaintext highlighter-rouge">E(E1, E2, ..., En)</code>:
