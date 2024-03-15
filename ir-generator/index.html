@@ -657,13 +657,22 @@ and check that the output looks right for input <code class="language-plaintext 
   <ul>
     <li>Operator <code class="language-plaintext highlighter-rouge">=</code> should require the left hand side to be an identifier and
 emit a <code class="language-plaintext highlighter-rouge">Copy</code> instruction.</li>
-    <li>Operators <code class="language-plaintext highlighter-rouge">==</code> and <code class="language-plaintext highlighter-rouge">!=</code> need to be special-cased e.g. by adding them to
-<code class="language-plaintext highlighter-rouge">root_types</code> with some kind of special-case type.</li>
     <li>Operators <code class="language-plaintext highlighter-rouge">and</code> and <code class="language-plaintext highlighter-rouge">or</code> should short-circuit just like in the
 <a href="../interpreter/#task4">Task 4 of the interpreter</a></li>
     <li>As in the interpreter, unary operator names should be prefixed with
 <code class="language-plaintext highlighter-rouge">unary_</code> to distinguish e.g. the binary minus <code class="language-plaintext highlighter-rouge">-</code> and
 the unary minus <code class="language-plaintext highlighter-rouge">unary_-</code>.</li>
+    <li>Adding operators <code class="language-plaintext highlighter-rouge">==</code> and <code class="language-plaintext highlighter-rouge">!=</code> to <code class="language-plaintext highlighter-rouge">root_types</code> is
+<span data-aside="eq-types">not necessary</span> in the base language.
+      <aside id="eq-types">
+        <p>The base language’s IR generator will only look at the type of an IR variable
+if it is the final result of the program.
+Therefore it will never look at the types of operators <code class="language-plaintext highlighter-rouge">==</code> and <code class="language-plaintext highlighter-rouge">!=</code>,
+except for very silly programs that result in one of those operators.
+You can ignore such cases and just not add <code class="language-plaintext highlighter-rouge">==</code> and <code class="language-plaintext highlighter-rouge">!=</code> to <code class="language-plaintext highlighter-rouge">root_types</code>,
+or you can add them with some special case placeholder type.</p>
+      </aside>
+    </li>
   </ul>
 
   <p>Manual testing is enough at this point.
