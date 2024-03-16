@@ -437,8 +437,9 @@ that can be executed immediately after <code class="language-plaintext highlight
     </ul>
   </li>
   <li>Create a queue <code class="language-plaintext highlighter-rouge">Q</code> of instruction indices, and enqueue all instruction indices to it.
-This is our work queue. Process <code class="language-plaintext highlighter-rouge">Q</code> as follows, until it’s empty:
+This is our work queue. While <code class="language-plaintext highlighter-rouge">Q</code> is not empty:
     <ul>
+      <li>Dequeue <code class="language-plaintext highlighter-rouge">i</code> from <code class="language-plaintext highlighter-rouge">Q</code>.</li>
       <li>Set <code class="language-plaintext highlighter-rouge">in[i] = merge(out[j] for each j in P)</code><br />
 where <code class="language-plaintext highlighter-rouge">merge</code> returns the union of the given sets.</li>
       <li>Set <code class="language-plaintext highlighter-rouge">out[i] = transfer(i, in[i])</code>.</li>
@@ -481,13 +482,14 @@ that might be executed immediately before <code class="language-plaintext highli
           <li>Otherwise, <code class="language-plaintext highlighter-rouge">P[i] = { i - 1 }</code>.</li>
         </ul>
       </li>
-      <li>Define set <code class="language-plaintext highlighter-rouge">S[i]</code> (”successors of <code class="language-plaintext highlighter-rouge">i</code>”) be be the indices of the instructions
+      <li>Define set <code class="language-plaintext highlighter-rouge">S[i]</code> (”successors of <code class="language-plaintext highlighter-rouge">i</code>”) be the indices of the instructions
 that can be executed immediately after <code class="language-plaintext highlighter-rouge">i</code>: <code class="language-plaintext highlighter-rouge">S[i] = { j | P[j] contains i }</code></li>
     </ul>
   </li>
   <li>Create a queue <code class="language-plaintext highlighter-rouge">Q</code> of instruction indices, and enqueue all instruction indices to it.
-This is our work queue. Process <code class="language-plaintext highlighter-rouge">Q</code> as follows, until it’s empty:
+This is our work queue.While <code class="language-plaintext highlighter-rouge">Q</code> is not empty:
     <ul>
+      <li>Dequeue <code class="language-plaintext highlighter-rouge">i</code> from <code class="language-plaintext highlighter-rouge">Q</code>.</li>
       <li>Set <code class="language-plaintext highlighter-rouge">in[i] = merge(out[j] for each j in P)</code>.</li>
       <li>Set <code class="language-plaintext highlighter-rouge">out[i] = transfer(i, in[i])</code>.</li>
       <li>If <code class="language-plaintext highlighter-rouge">out[i]</code> changed from its previous value,<br />
