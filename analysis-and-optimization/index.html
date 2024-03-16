@@ -410,11 +410,12 @@ into the dataflow framework, of which reaching definitions will be just one inst
 <ol>
   <li>Define the type <code class="language-plaintext highlighter-rouge">State</code> to be a dictionary of IR variable names to sets of
 (original) instruction indices.</li>
-  <li>Define two empty dictionaries <code class="language-plaintext highlighter-rouge">in</code> and <code class="language-plaintext highlighter-rouge">out</code>, both mapping instruction indices to <code class="language-plaintext highlighter-rouge">State</code>s.
+  <li>Define two dictionaries <code class="language-plaintext highlighter-rouge">in</code> and <code class="language-plaintext highlighter-rouge">out</code>, both mapping instruction indices to <code class="language-plaintext highlighter-rouge">State</code>s.
 These define the <strong>input and output states</strong> of each instruction.</li>
+  <li>Set <code class="language-plaintext highlighter-rouge">in[i]</code> and <code class="language-plaintext highlighter-rouge">out[i]</code> for all instruction indices <code class="language-plaintext highlighter-rouge">i</code> to empty states.</li>
   <li>Set <code class="language-plaintext highlighter-rouge">in[0]</code> to a state where each variable used by the function is set to
 the special value <code class="language-plaintext highlighter-rouge">-1</code>, signifying ”uninitialized”,
-and each parameter and global variable is set to <code class="language-plaintext highlighter-rouge">-2</code>, signifying ”predefined”.</li>
+and each parameter and global is set to <code class="language-plaintext highlighter-rouge">-2</code>, signifying ”predefined”.</li>
   <li>Define a <strong>transfer function</strong> <code class="language-plaintext highlighter-rouge">transfer</code> that takes an input state and
 produces an output state for a given instruction index <code class="language-plaintext highlighter-rouge">i</code>.
 The transfer function should return an output state that is the
@@ -422,17 +423,27 @@ same as the input state, except all variables <code class="language-plaintext hi
 at <code class="language-plaintext highlighter-rouge">i</code> writes to should be mapped to the set <code class="language-plaintext highlighter-rouge">{i}</code>.
 This means: if the instruction at <code class="language-plaintext highlighter-rouge">i</code> writes to variable <code class="language-plaintext highlighter-rouge">x</code>, then
 right after the instruction at <code class="language-plaintext highlighter-rouge">i</code>, <code class="language-plaintext highlighter-rouge">x</code> can only have been last set at <code class="language-plaintext highlighter-rouge">i</code>.</li>
-  <li>Repeat the following until there are no changes to <code class="language-plaintext highlighter-rouge">in</code> and <code class="language-plaintext highlighter-rouge">out</code>:
+  <li>For each instruction index <code class="language-plaintext highlighter-rouge">i</code>:
     <ul>
-      <li>For any <code class="language-plaintext highlighter-rouge">in[i]</code> that has changed,<br />
-set <code class="language-plaintext highlighter-rouge">out[i] = transfer(i, in[i])</code>,<br />
-and if <code class="language-plaintext highlighter-rouge">i+1</code> is in the same basic block,
-then set <code class="language-plaintext highlighter-rouge">in[i+1] = out[i]</code>.</li>
-      <li>For each label instruction index <code class="language-plaintext highlighter-rouge">i</code>,<br />
-let <code class="language-plaintext highlighter-rouge">J</code> be the set of jump instructions that might jump to <code class="language-plaintext highlighter-rouge">i</code>.<br />
-If any <code class="language-plaintext highlighter-rouge">out[j]</code> for any <code class="language-plaintext highlighter-rouge">j</code> in <code class="language-plaintext highlighter-rouge">J</code> has changed,<br />
-set <code class="language-plaintext highlighter-rouge">in[i] = merge(out[j] for each j in J)</code>
-where <code class="language-plaintext highlighter-rouge">merge</code> takes the union of the given sets.</li>
+      <li>Define set <code class="language-plaintext highlighter-rouge">P[i]</code> (”predecessors of <code class="language-plaintext highlighter-rouge">i</code>”) to be the indices of the instructions
+that might be executed immediately before <code class="language-plaintext highlighter-rouge">i</code>:
+        <ul>
+          <li>If <code class="language-plaintext highlighter-rouge">i</code> refers to a label instruction, then <code class="language-plaintext highlighter-rouge">P[i]</code> is the set of jump instructions that might jump to <code class="language-plaintext highlighter-rouge">i</code>.</li>
+          <li>Otherwise, <code class="language-plaintext highlighter-rouge">P[i] = { i - 1 }</code>.</li>
+        </ul>
+      </li>
+      <li>Define set <code class="language-plaintext highlighter-rouge">S[i]</code> (”successors of <code class="language-plaintext highlighter-rouge">i</code>”) be be the indices of the instructions
+that can be executed immediately after <code class="language-plaintext highlighter-rouge">i</code>: <code class="language-plaintext highlighter-rouge">S[i] = { j | P[j] contains i }</code></li>
+    </ul>
+  </li>
+  <li>Create a queue <code class="language-plaintext highlighter-rouge">Q</code> of instruction indices, and enqueue all instruction indices to it.
+This is our work queue. Process <code class="language-plaintext highlighter-rouge">Q</code> as follows, until it’s empty:
+    <ul>
+      <li>Set <code class="language-plaintext highlighter-rouge">in[i] = merge(out[j] for each j in P)</code><br />
+where <code class="language-plaintext highlighter-rouge">merge</code> returns the union of the given sets.</li>
+      <li>Set <code class="language-plaintext highlighter-rouge">out[i] = transfer(i, in[i])</code>.</li>
+      <li>If <code class="language-plaintext highlighter-rouge">out[i]</code> changed from its previous value,<br />
+then enqueue every element of <code class="language-plaintext highlighter-rouge">S[i]</code> to <code class="language-plaintext highlighter-rouge">Q</code>.</li>
     </ul>
   </li>
 </ol>
@@ -445,6 +456,8 @@ where <code class="language-plaintext highlighter-rouge">merge</code> takes the 
 reaching definitions. We just leave the following things abstract:</p>
 <ul>
   <li>the type <code class="language-plaintext highlighter-rouge">State</code></li>
+  <li>the initial value for <code class="language-plaintext highlighter-rouge">in[0]</code></li>
+  <li>the initial values for all other <code class="language-plaintext highlighter-rouge">in</code> and <code class="language-plaintext highlighter-rouge">out</code> elements</li>
   <li>the function <code class="language-plaintext highlighter-rouge">transfer</code>, which maps input states to output states</li>
   <li>the function <code class="language-plaintext highlighter-rouge">merge</code>, which merges jump instruction outputs</li>
 </ul>
@@ -453,21 +466,32 @@ reaching definitions. We just leave the following things abstract:</p>
 
 <ol>
   <li>Define a type <code class="language-plaintext highlighter-rouge">State</code>.</li>
-  <li>Define two empty dictionaries <code class="language-plaintext highlighter-rouge">in</code> and <code class="language-plaintext highlighter-rouge">out</code>, both mapping instruction indices to <code class="language-plaintext highlighter-rouge">State</code>s.
+  <li>Define two dictionaries <code class="language-plaintext highlighter-rouge">in</code> and <code class="language-plaintext highlighter-rouge">out</code>, both mapping instruction indices to <code class="language-plaintext highlighter-rouge">State</code>s.
 These define the <strong>input and output states</strong> of each instruction.</li>
+  <li>Initialize each <code class="language-plaintext highlighter-rouge">in[i]</code> and <code class="language-plaintext highlighter-rouge">out[i]</code> to some initialization value.</li>
   <li>Initialize <code class="language-plaintext highlighter-rouge">in[0]</code> based on globals and function parameters.</li>
   <li>Define a <strong>transfer function</strong> <code class="language-plaintext highlighter-rouge">transfer</code> that takes an input state and
 produces an output state for a given instruction index <code class="language-plaintext highlighter-rouge">i</code>.</li>
-  <li>Repeat the following until there are no changes to <code class="language-plaintext highlighter-rouge">in</code> and <code class="language-plaintext highlighter-rouge">out</code>:
+  <li>For each instruction index <code class="language-plaintext highlighter-rouge">i</code>:
     <ul>
-      <li>For any <code class="language-plaintext highlighter-rouge">in[i]</code> that has changed,<br />
-set <code class="language-plaintext highlighter-rouge">out[i] = transfer(i, in[i])</code>,<br />
-and if <code class="language-plaintext highlighter-rouge">i+1</code> is in the same basic block,
-then set <code class="language-plaintext highlighter-rouge">in[i+1] = out[i]</code>.</li>
-      <li>For each label instruction index <code class="language-plaintext highlighter-rouge">i</code>,<br />
-let <code class="language-plaintext highlighter-rouge">J</code> be the set of jump instructions that might jump to <code class="language-plaintext highlighter-rouge">i</code>.<br />
-If any <code class="language-plaintext highlighter-rouge">out[j]</code> for any <code class="language-plaintext highlighter-rouge">j</code> in <code class="language-plaintext highlighter-rouge">J</code> has changed,<br />
-set <code class="language-plaintext highlighter-rouge">in[i] = merge(out[j] for each j in J)</code>.</li>
+      <li>Define set <code class="language-plaintext highlighter-rouge">P[i]</code> (”predecessors of <code class="language-plaintext highlighter-rouge">i</code>”) to be the indices of the instructions
+that might be executed immediately before <code class="language-plaintext highlighter-rouge">i</code>:
+        <ul>
+          <li>If <code class="language-plaintext highlighter-rouge">i</code> refers to a label instruction, then <code class="language-plaintext highlighter-rouge">P[i]</code> is the set of jump instructions that might jump to <code class="language-plaintext highlighter-rouge">i</code>.</li>
+          <li>Otherwise, <code class="language-plaintext highlighter-rouge">P[i] = { i - 1 }</code>.</li>
+        </ul>
+      </li>
+      <li>Define set <code class="language-plaintext highlighter-rouge">S[i]</code> (”successors of <code class="language-plaintext highlighter-rouge">i</code>”) be be the indices of the instructions
+that can be executed immediately after <code class="language-plaintext highlighter-rouge">i</code>: <code class="language-plaintext highlighter-rouge">S[i] = { j | P[j] contains i }</code></li>
+    </ul>
+  </li>
+  <li>Create a queue <code class="language-plaintext highlighter-rouge">Q</code> of instruction indices, and enqueue all instruction indices to it.
+This is our work queue. Process <code class="language-plaintext highlighter-rouge">Q</code> as follows, until it’s empty:
+    <ul>
+      <li>Set <code class="language-plaintext highlighter-rouge">in[i] = merge(out[j] for each j in P)</code>.</li>
+      <li>Set <code class="language-plaintext highlighter-rouge">out[i] = transfer(i, in[i])</code>.</li>
+      <li>If <code class="language-plaintext highlighter-rouge">out[i]</code> changed from its previous value,<br />
+then enqueue every element of <code class="language-plaintext highlighter-rouge">S[i]</code> to <code class="language-plaintext highlighter-rouge">Q</code>.</li>
     </ul>
   </li>
 </ol>
@@ -478,7 +502,7 @@ set <code class="language-plaintext highlighter-rouge">in[i] = merge(out[j] for 
 
 <p>There is also a very similar <strong>backwards dataflow framework</strong>
 (<a href="#task5">task 5</a> &amp; <a href="#task6">task 6</a>),
-where data flows in reverse: from <code class="language-plaintext highlighter-rouge">out</code> to <code class="language-plaintext highlighter-rouge">in</code> and from labels to jumps.</p>
+where data flows in reverse: from <code class="language-plaintext highlighter-rouge">out</code> to <code class="language-plaintext highlighter-rouge">in</code> and from successors to predecessors.</p>
 
 <p>This is used by e.g. live variables analysis i.e.
 ”which variables may still be read after a given point in the program?”
@@ -601,9 +625,9 @@ is surely read after that point. The correct negation is
 ”<code class="language-plaintext highlighter-rouge">x</code> <em>might</em> be read after that point”.</p>
 
 <p>Non-conservative analyses can still be useful in program style checkers (”linters”)
-to warn about <em>likely</em> errors. Such an analysis might, for instance,
+to warn about <em>likely</em> errors. One such an analysis might, for instance,
 warn about a potential read from deallocated memory in the following
-program, even though <em>we</em> can (in this case very easily) see that it is impossible:</p>
+program, because it can see a potential execution path from <code class="language-plaintext highlighter-rouge">delete p</code> to <code class="language-plaintext highlighter-rouge">*p</code>:</p>
 
 <div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
     <span class="k">var</span> <span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">Int</span><span class="p">(</span><span class="m">3</span><span class="p">);</span>
@@ -613,6 +637,23 @@ program, even though <em>we</em> can (in this case very easily) see that it is i
     <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">p</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div></div>
+
+<p>Such an analysis might fail to find more complicated code paths,
+such as when the deletion of <code class="language-plaintext highlighter-rouge">p</code> happens in some function,
+perhaps through some copy of <code class="language-plaintext highlighter-rouge">p</code>:</p>
+
+<div class="language-lol highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+    <span class="k">var</span> <span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">Int</span><span class="p">(</span><span class="m">3</span><span class="p">);</span>
+    <span class="k">var</span> <span class="n">q</span> <span class="o">=</span> <span class="n">f1</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>  <span class="c"># maybe `f1` returns a copy of `p`</span>
+    <span class="n">f2</span><span class="p">(</span><span class="n">q</span><span class="p">);</span>          <span class="c"># maybe `f2` deletes `q`</span>
+    <span class="n">f3</span><span class="p">(</span><span class="o">*</span><span class="n">p</span><span class="p">);</span>         <span class="c"># hard to say if `p` has been deleted</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>We could imagine a conservative version of this analysis that defaults to claiming
+<em>every</em> pointer dereference is a potential read from deallocated memory, unless it can prove otherwise.
+Such an analysis would be very difficult to write with a low enough false positive rate
+to be useful, except in a sufficiently constrained language, such as Rust.</p>
 
 <p class="note-title">Example: improving live variables analysis with alias analysis</p>
 

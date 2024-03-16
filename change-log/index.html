@@ -205,6 +205,33 @@ to the material during the course.</p>
     </ul>
   </li>
   <li>Project page, renamed unary operator <code class="language-plaintext highlighter-rouge">!</code> -&gt; <code class="language-plaintext highlighter-rouge">not</code> to be consistent with other pages. You can use either name.</li>
+  <li>Chapter 8: reformulated the dataflow algorithm’s description to be more verbose but precise, especially around initialization and change tracking.
+The <strong>old</strong> formulation is <span data-aside="ch8-old-dataflow-algo">here</span>.
+    <aside id="ch8-old-dataflow-algo">
+
+      <ol>
+        <li>Define a type <code class="language-plaintext highlighter-rouge">State</code>.</li>
+        <li>Define two empty dictionaries <code class="language-plaintext highlighter-rouge">in</code> and <code class="language-plaintext highlighter-rouge">out</code>, both mapping instruction indices to <code class="language-plaintext highlighter-rouge">State</code>s.
+  These define the <strong>input and output states</strong> of each instruction.</li>
+        <li>Initialize <code class="language-plaintext highlighter-rouge">in[0]</code> based on globals and function parameters.</li>
+        <li>Define a <strong>transfer function</strong> <code class="language-plaintext highlighter-rouge">transfer</code> that takes an input state and
+  produces an output state for a given instruction index <code class="language-plaintext highlighter-rouge">i</code>.</li>
+        <li>Repeat the following until there are no changes to <code class="language-plaintext highlighter-rouge">in</code> and <code class="language-plaintext highlighter-rouge">out</code>:
+          <ul>
+            <li>For any <code class="language-plaintext highlighter-rouge">in[i]</code> that has changed,<br />
+ set <code class="language-plaintext highlighter-rouge">out[i] = transfer(i, in[i])</code>,<br />
+ and if <code class="language-plaintext highlighter-rouge">i+1</code> is in the same basic block,
+ then set <code class="language-plaintext highlighter-rouge">in[i+1] = out[i]</code>.</li>
+            <li>For each label instruction index <code class="language-plaintext highlighter-rouge">i</code>,<br />
+ let <code class="language-plaintext highlighter-rouge">J</code> be the set of jump instructions that might jump to <code class="language-plaintext highlighter-rouge">i</code>.<br />
+ If any <code class="language-plaintext highlighter-rouge">out[j]</code> for any <code class="language-plaintext highlighter-rouge">j</code> in <code class="language-plaintext highlighter-rouge">J</code> has changed,<br />
+ set <code class="language-plaintext highlighter-rouge">in[i] = merge(out[j] for each j in J)</code>.</li>
+          </ul>
+        </li>
+      </ol>
+    </aside>
+  </li>
+  <li>Chapter 8: expanded the section on conservatism a little.</li>
 </ul>
 
 <h2 id="2024-03-15">2024-03-15</h2>
