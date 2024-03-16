@@ -416,8 +416,8 @@ These define the <strong>input and output states</strong> of each instruction.</
 the special value <code class="language-plaintext highlighter-rouge">-1</code>, signifying ”uninitialized”,
 and each parameter and global is set to <code class="language-plaintext highlighter-rouge">-2</code>, signifying ”predefined”.</li>
   <li>For all instruction indices <code class="language-plaintext highlighter-rouge">i &gt; 0</code>, set <code class="language-plaintext highlighter-rouge">in[i]</code> and <code class="language-plaintext highlighter-rouge">out[i]</code> to empty states.</li>
-  <li>Define a <strong>transfer function</strong> <code class="language-plaintext highlighter-rouge">transfer</code> that takes an input state and
-produces an output state for a given instruction index <code class="language-plaintext highlighter-rouge">i</code>.
+  <li>Define a <strong>transfer function</strong> <code class="language-plaintext highlighter-rouge">transfer(s, i)</code> that
+takes an input state <code class="language-plaintext highlighter-rouge">s</code> for instruction <code class="language-plaintext highlighter-rouge">i</code> and produces an output state.
 The transfer function should return an output state that is the
 same as the input state, except all variables <code class="language-plaintext highlighter-rouge">x</code> that the instruction
 at <code class="language-plaintext highlighter-rouge">i</code> writes to should be mapped to the set <code class="language-plaintext highlighter-rouge">{i}</code>.
@@ -442,7 +442,7 @@ This is our work queue. While <code class="language-plaintext highlighter-rouge"
       <li>Dequeue <code class="language-plaintext highlighter-rouge">i</code> from <code class="language-plaintext highlighter-rouge">Q</code>.</li>
       <li>Set <code class="language-plaintext highlighter-rouge">in[i] = merge(out[j] for each j in P)</code><br />
 where <code class="language-plaintext highlighter-rouge">merge</code> returns the union of the given sets.</li>
-      <li>Set <code class="language-plaintext highlighter-rouge">out[i] = transfer(i, in[i])</code>.</li>
+      <li>Set <code class="language-plaintext highlighter-rouge">out[i] = transfer(in[i], i)</code>.</li>
       <li>If <code class="language-plaintext highlighter-rouge">out[i]</code> changed from its previous value,<br />
 then enqueue every element of <code class="language-plaintext highlighter-rouge">S[i]</code> to <code class="language-plaintext highlighter-rouge">Q</code>.</li>
     </ul>
@@ -471,8 +471,8 @@ reaching definitions. We just leave the following things abstract:</p>
 These define the <strong>input and output states</strong> of each instruction.</li>
   <li>Set <code class="language-plaintext highlighter-rouge">out[0]</code> to a suitable start state.</li>
   <li>For all instruction indices <code class="language-plaintext highlighter-rouge">i &gt; 0</code>, set <code class="language-plaintext highlighter-rouge">in[i]</code> and <code class="language-plaintext highlighter-rouge">out[i]</code> to a suitable state.</li>
-  <li>Define a <strong>transfer function</strong> <code class="language-plaintext highlighter-rouge">transfer</code> that takes an input state and
-produces an output state for a given instruction index <code class="language-plaintext highlighter-rouge">i</code>.</li>
+  <li>Define a <strong>transfer function</strong> <code class="language-plaintext highlighter-rouge">transfer(s, i)</code> that
+takes an input state <code class="language-plaintext highlighter-rouge">s</code> for instruction <code class="language-plaintext highlighter-rouge">i</code> and produces an output state.</li>
   <li>For each instruction index <code class="language-plaintext highlighter-rouge">i</code>:
     <ul>
       <li>Define set <code class="language-plaintext highlighter-rouge">P[i]</code> (”predecessors of <code class="language-plaintext highlighter-rouge">i</code>”) to be the indices of the instructions
@@ -491,7 +491,7 @@ This is our work queue.While <code class="language-plaintext highlighter-rouge">
     <ul>
       <li>Dequeue <code class="language-plaintext highlighter-rouge">i</code> from <code class="language-plaintext highlighter-rouge">Q</code>.</li>
       <li>Set <code class="language-plaintext highlighter-rouge">in[i] = merge(out[j] for each j in P)</code>.</li>
-      <li>Set <code class="language-plaintext highlighter-rouge">out[i] = transfer(i, in[i])</code>.</li>
+      <li>Set <code class="language-plaintext highlighter-rouge">out[i] = transfer(in[i], i)</code>.</li>
       <li>If <code class="language-plaintext highlighter-rouge">out[i]</code> changed from its previous value,<br />
 then enqueue every element of <code class="language-plaintext highlighter-rouge">S[i]</code> to <code class="language-plaintext highlighter-rouge">Q</code>.</li>
     </ul>
