@@ -513,7 +513,8 @@ Make it possible to define new functions as well.</p>
     <p>Currently our language’s top-level syntactic element is one or more
 top-level expressions. Let’s change it to be a
 <strong>module</strong> instead. A module can contain <strong>function definitions</strong>
-in addition to the top-level expressions.</p>
+in addition to the top-level expressions.
+(In this design, you should not consider modules and function definitions themselves to be expressions).</p>
 
     <p>Make the following structural changes, but don’t write code to actually
 do anything with function definitions just yet:</p>
