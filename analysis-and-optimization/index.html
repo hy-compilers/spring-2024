@@ -413,7 +413,7 @@ into the dataflow framework, of which reaching definitions will be just one inst
   <li>Define two dictionaries <code class="language-plaintext highlighter-rouge">in</code> and <code class="language-plaintext highlighter-rouge">out</code>, both mapping instruction indices to <code class="language-plaintext highlighter-rouge">State</code>s.
 These define the <strong>input and output states</strong> of each instruction.</li>
   <li>Set <code class="language-plaintext highlighter-rouge">in[i]</code> and <code class="language-plaintext highlighter-rouge">out[i]</code> for all instruction indices <code class="language-plaintext highlighter-rouge">i</code> to empty states.</li>
-  <li>Set <code class="language-plaintext highlighter-rouge">in[0]</code> to a state where each variable used by the function is set to
+  <li>Set <code class="language-plaintext highlighter-rouge">out[0]</code> to a state where each variable used by the function is set to
 the special value <code class="language-plaintext highlighter-rouge">-1</code>, signifying ”uninitialized”,
 and each parameter and global is set to <code class="language-plaintext highlighter-rouge">-2</code>, signifying ”predefined”.</li>
   <li>Define a <strong>transfer function</strong> <code class="language-plaintext highlighter-rouge">transfer</code> that takes an input state and
@@ -436,7 +436,7 @@ that might be executed immediately before <code class="language-plaintext highli
 that can be executed immediately after <code class="language-plaintext highlighter-rouge">i</code>: <code class="language-plaintext highlighter-rouge">S[i] = { j | P[j] contains i }</code></li>
     </ul>
   </li>
-  <li>Create a queue <code class="language-plaintext highlighter-rouge">Q</code> of instruction indices, and enqueue all instruction indices to it.
+  <li>Create a queue <code class="language-plaintext highlighter-rouge">Q</code> of instruction indices, and enqueue all instruction indices except <code class="language-plaintext highlighter-rouge">0</code> to it.
 This is our work queue. While <code class="language-plaintext highlighter-rouge">Q</code> is not empty:
     <ul>
       <li>Dequeue <code class="language-plaintext highlighter-rouge">i</code> from <code class="language-plaintext highlighter-rouge">Q</code>.</li>
@@ -457,7 +457,7 @@ then enqueue every element of <code class="language-plaintext highlighter-rouge"
 reaching definitions. We just leave the following things abstract:</p>
 <ul>
   <li>the type <code class="language-plaintext highlighter-rouge">State</code></li>
-  <li>the initial value for <code class="language-plaintext highlighter-rouge">in[0]</code></li>
+  <li>the initial value for <code class="language-plaintext highlighter-rouge">out[0]</code></li>
   <li>the initial values for all other <code class="language-plaintext highlighter-rouge">in</code> and <code class="language-plaintext highlighter-rouge">out</code> elements</li>
   <li>the function <code class="language-plaintext highlighter-rouge">transfer</code>, which maps input states to output states</li>
   <li>the function <code class="language-plaintext highlighter-rouge">merge</code>, which merges jump instruction outputs</li>
@@ -470,7 +470,7 @@ reaching definitions. We just leave the following things abstract:</p>
   <li>Define two dictionaries <code class="language-plaintext highlighter-rouge">in</code> and <code class="language-plaintext highlighter-rouge">out</code>, both mapping instruction indices to <code class="language-plaintext highlighter-rouge">State</code>s.
 These define the <strong>input and output states</strong> of each instruction.</li>
   <li>Initialize each <code class="language-plaintext highlighter-rouge">in[i]</code> and <code class="language-plaintext highlighter-rouge">out[i]</code> to some initialization value.</li>
-  <li>Initialize <code class="language-plaintext highlighter-rouge">in[0]</code> based on globals and function parameters.</li>
+  <li>Initialize <code class="language-plaintext highlighter-rouge">out[0]</code> based on globals and function parameters.</li>
   <li>Define a <strong>transfer function</strong> <code class="language-plaintext highlighter-rouge">transfer</code> that takes an input state and
 produces an output state for a given instruction index <code class="language-plaintext highlighter-rouge">i</code>.</li>
   <li>For each instruction index <code class="language-plaintext highlighter-rouge">i</code>:
@@ -486,7 +486,7 @@ that might be executed immediately before <code class="language-plaintext highli
 that can be executed immediately after <code class="language-plaintext highlighter-rouge">i</code>: <code class="language-plaintext highlighter-rouge">S[i] = { j | P[j] contains i }</code></li>
     </ul>
   </li>
-  <li>Create a queue <code class="language-plaintext highlighter-rouge">Q</code> of instruction indices, and enqueue all instruction indices to it.
+  <li>Create a queue <code class="language-plaintext highlighter-rouge">Q</code> of instruction indices, and enqueue all instruction indices except <code class="language-plaintext highlighter-rouge">0</code> to it.
 This is our work queue.While <code class="language-plaintext highlighter-rouge">Q</code> is not empty:
     <ul>
       <li>Dequeue <code class="language-plaintext highlighter-rouge">i</code> from <code class="language-plaintext highlighter-rouge">Q</code>.</li>
