@@ -701,7 +701,8 @@ type classes with <code class="language-plaintext highlighter-rouge">@dataclass<
   <p>Modify <code class="language-plaintext highlighter-rouge">typecheck</code> so that whenever it visits a node,
 it also assigns the return value to the visited node’s <code class="language-plaintext highlighter-rouge">type</code> field.</p>
 
-  <p><strong>Hint</strong>: It may be convenient to put the bulk of <code class="language-plaintext highlighter-rouge">typecheck</code> into
+  <p><strong>Hint</strong>: Try to avoid having to remember to set <code class="language-plaintext highlighter-rouge">node.type</code> in every
+<code class="language-plaintext highlighter-rouge">case</code>. It may be convenient to put the bulk of <code class="language-plaintext highlighter-rouge">typecheck</code> into
 a separate function.</p>
 </div>
 

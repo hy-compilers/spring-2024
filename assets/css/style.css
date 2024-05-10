@@ -4,7 +4,7 @@ html {
   scroll-behavior: smooth;
   overflow-y: scroll;
 }
-@media screen and (max-width: 550px) {
+@media screen and (max-width: 600px) {
   html {
     font-size: 16px;
   }
@@ -16,7 +16,7 @@ body {
   flex-direction: row;
   justify-content: center;
 }
-@media screen and (max-width: 780px) {
+@media screen and (max-width: 880px) {
   body {
     display: block;
   }
@@ -33,7 +33,7 @@ body {
   display: flex;
   flex-direction: column;
 }
-@media screen and (max-width: 780px) {
+@media screen and (max-width: 880px) {
   .side {
     position: fixed;
     z-index: 3;
@@ -75,7 +75,7 @@ header > h2 {
   font-size: 1rem;
   font-weight: 600;
 }
-@media screen and (max-width: 780px) {
+@media screen and (max-width: 880px) {
   header {
     padding: 0 20px 12px;
   }
@@ -117,7 +117,7 @@ nav > ul > li > a {
 nav ul.hide-menu {
   display: none;
 }
-@media screen and (max-width: 780px) {
+@media screen and (max-width: 880px) {
   nav {
     background-color: white;
   }
@@ -156,16 +156,22 @@ main {
   padding: 70px 20px 0;
   overflow-x: scroll;
 }
-@media screen and (max-width: 780px) {
+@media screen and (max-width: 880px) {
   main {
-    padding: 80px 15px 0;
+    padding: 80px 20px 0;
+  }
+}
+@media screen and (max-width: 600px) {
+  main {
+    padding-left: 15px;
+    padding-right: 15px;
   }
 }
 
 .awning {
   display: none;
 }
-@media screen and (max-width: 780px) {
+@media screen and (max-width: 880px) {
   .awning {
     display: block;
     position: fixed;
@@ -174,8 +180,8 @@ main {
     left: 0;
     right: 0;
     height: 60px;
-    padding-left: 75px;
-    padding-right: 15px;
+    padding-left: 80px;
+    padding-right: 20px;
     color: transparent;
     font-size: 1rem;
     font-weight: bold;
@@ -195,11 +201,17 @@ main {
     transition: none;
   }
 }
+@media screen and (max-width: 600px) {
+  .awning {
+    padding-left: 75px;
+    padding-right: 15px;
+  }
+}
 
 .menu {
   display: none;
 }
-@media screen and (max-width: 780px) {
+@media screen and (max-width: 880px) {
   .menu {
     background-color: #fca311;
     position: fixed;
@@ -226,7 +238,7 @@ main {
 .menu-background {
   display: none;
 }
-@media screen and (max-width: 780px) {
+@media screen and (max-width: 880px) {
   .menu-background {
     display: initial;
     position: fixed;
@@ -276,9 +288,9 @@ h3 {
 article, p, h1, h2, h3 {
   scroll-margin-top: 20px;
 }
-@media screen and (max-width: 780px) {
+@media screen and (max-width: 880px) {
   article, p, h1, h2, h3 {
-    scroll-margin-top: 75px;
+    scroll-margin-top: 80px;
   }
 }
 

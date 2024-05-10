@@ -43,7 +43,7 @@ stdlib_asm_code: str = """
     .section .text
 
 # ***** Function '_start' *****
-# Calls function 'main', prints the output value, and halts the program
+# Calls function 'main' and halts the program
 
 _start:
     call main
